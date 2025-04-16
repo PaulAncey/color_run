@@ -1,0 +1,29 @@
+<!-- Fragment contenant uniquement la liste des messages pour chargement AJAX -->
+<div xmlns:th="http://www.thymeleaf.org">
+  <div th:if="${#lists.isEmpty(messages)}" class="alert alert-info">
+    Aucun message pour le moment. Soyez le premier à écrire !
+  </div>
+
+  <div
+    th:each="message : ${messages}"
+    class="message"
+    th:style="${message.idUtilisateur == session.user?.idUtilisateur ? 'background-color: #f0f7ff; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;' : 'background-color: #f8f9fa; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;'}"
+  >
+    <div
+      style="
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+      "
+    >
+      <strong
+        th:text="${message.utilisateurNom != null ? message.utilisateurNom : 'Utilisateur #' + message.idUtilisateur}"
+        >Nom utilisateur</strong
+      >
+      <span th:text="${#dates.format(message.dateEnvoi, 'dd/MM/yyyy HH:mm')}"
+        >Date</span
+      >
+    </div>
+    <p th:text="${message.contenu}">Contenu du message</p>
+  </div>
+</div>

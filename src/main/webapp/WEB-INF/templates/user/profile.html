@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mon profil - Color Run</title>
+    <link rel="stylesheet" th:href="@{/resources/css/main.css}" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <!-- Main content -->
+    <div class="container">
+      <h1>Mon profil</h1>
+
+      <!-- Alertes -->
+      <div
+        class="alert alert-success"
+        th:if="${success}"
+        th:text="${success}"
+      ></div>
+      <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+
+      <!-- Informations utilisateur -->
+      <div class="form-container">
+        <h2>Mes informations</h2>
+
+        <form th:action="@{/profile}" method="post">
+          <div class="form-group">
+            <label for="nom">Nom</label>
+            <input
+              type="text"
+              id="nom"
+              name="nom"
+              th:value="${session.user.nom}"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="prenom">Prénom</label>
+            <input
+              type="text"
+              id="prenom"
+              name="prenom"
+              th:value="${session.user.prenom}"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              th:value="${session.user.email}"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password"
+              >Nouveau mot de passe (laisser vide pour ne pas changer)</label
+            >
+            <input type="password" id="password" name="password" />
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword"
+              >Confirmer le nouveau mot de passe</label
+            >
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+            />
+          </div>
+
+          <button type="submit" class="btn btn-block">Mettre à jour</button>
+        </form>
+      </div>
+
+      <!-- Rôles -->
+      <div class="card" style="margin-top: 2rem">
+        <div class="card-header">
+          <h2>Mes rôles</h2>
+        </div>
+        <div class="card-body">
+          <ul>
+            <li th:each="role : ${userRoles}" th:text="${role}">Rôle</li>
+          </ul>
+
+          <!-- Lien pour demander à être organisateur -->
+          <div
+            th:if="${!#lists.contains(userRoles, 'ORGANISATEUR') && canRequestOrganizerRole}"
+            style="margin-top: 1rem"
+          >
+            <a th:href="@{/user/request-organizer}" class="btn"
+              >Devenir organisateur</a
+            >
+          </div>
+
+          <!-- Message si demande en attente -->
+          <div
+            th:if="${!#lists.contains(userRoles, 'ORGANISATEUR') && !canRequestOrganizerRole}"
+            style="margin-top: 1rem"
+          >
+            <p class="alert alert-info">
+              Votre demande pour devenir organisateur est en attente de
+              validation.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+  </body>
+</html>
