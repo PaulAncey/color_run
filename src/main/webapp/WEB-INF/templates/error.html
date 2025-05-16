@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Erreur - Color Run</title>
+    <link rel="stylesheet" th:href="@{/resources/css/main.css}" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <!-- Main content -->
+    <div class="container" style="text-align: center; padding: 3rem 1rem">
+      <h1>Une erreur est survenue</h1>
+
+      <div
+        class="alert alert-danger"
+        style="max-width: 600px; margin: 2rem auto"
+      >
+        <p th:text="${error}">Message d'erreur</p>
+      </div>
+
+      <div style="margin-top: 2rem">
+        <a th:href="@{/}" class="btn">Retour à l'accueil</a>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+  </body>
+</html>

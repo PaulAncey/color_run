@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tableau de bord - Color Run</title>
+    <link rel="stylesheet" th:href="@{/resources/css/main.css}" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <!-- Main content -->
+    <div class="container">
+      <h1>Tableau de bord</h1>
+
+      <!-- Alertes -->
+      <div
+        class="alert alert-success"
+        th:if="${success}"
+        th:text="${success}"
+      ></div>
+
+      <!-- Résumé de l'utilisateur -->
+      <div class="card" style="margin-bottom: 2rem">
+        <div class="card-header">
+          <h2>
+            Bienvenue,
+            <span th:text="${session.user.prenom + ' ' + session.user.nom}"
+              >Utilisateur</span
+            >
+            !
+          </h2>
+        </div>
+        <div class="card-body">
+          <div style="display: flex; flex-wrap: wrap; gap: 2rem">
+            <!-- Informations de profil -->
+            <div style="flex: 1; min-width: 300px">
+              <h3>Mes informations</h3>
+              <p>
+                <strong>Email :</strong>
+                <span th:text="${session.user.email}">Email</span>
+              </p>
+              <p>
+                <strong>Membre depuis :</strong>
+                <span
+                  th:text="${#dates.format(session.user.dateCreation, 'dd/MM/yyyy')}"
+                  >Date</span
+                >
+              </p>
+              <p>
+                <strong>Rôles :</strong>
+                <span th:text="${#strings.listJoin(userRoles, ', ')}"
+                  >Rôles</span
+                >
+              </p>
+
+              <div style="margin-top: 1rem">
+                <a th:href="@{/profile}" class="btn">Modifier mon profil</a>
+              </div>
+            </div>
+
+            <!-- Stats et liens rapides -->
+            <div style="flex: 1; min-width: 300px">
+              <h3>Mes statistiques</h3>
+              <p>
+                <strong>Courses à venir :</strong>
+                <span th:text="${nbParticipations}">0</span>
+              </p>
+              <p>
+                <strong>Courses organisées :</strong>
+                <span
+                  th:if="${#lists.contains(userRoles, 'ORGANISATEUR')}"
+                  th:text="${nbCoursesOrganisees}"
+                  >0</span
+                ><span th:unless="${#lists.contains(userRoles, 'ORGANISATEUR')}"
+                  >-</span
+                >
+              </p>
+
+              <div style="margin-top: 1.5rem">
+                <h3>Liens rapides</h3>
+                <div style="margin-top: 0.5rem">
+                  <a
+                    th:href="@{/participations}"
+                    class="btn"
+                    style="margin-right: 0.5rem"
+                    >Mes participations</a
+                  >
+                  <a th:href="@{/courses}" class="btn">Voir les courses</a>
+                </div>
+
+                <!-- Liens pour organisateur -->
+                <div
+                  th:if="${#lists.contains(userRoles, 'ORGANISATEUR')}"
+                  style="margin-top: 1rem"
+                >
+                  <a
+                    th:href="@{/organisateur/courses}"
+                    class="btn"
+                    style="margin-right: 0.5rem"
+                    >Mes courses</a
+                  >
+                  <a th:href="@{/organisateur/courses/create}" class="btn"
+                    >Créer une course</a
+                  >
+                </div>
+
+                <!-- Liens pour admin -->
+                <div
+                  th:if="${#lists.contains(userRoles, 'ADMIN')}"
+                  style="margin-top: 1rem"
+                >
+                  <a th:href="@{/admin/organizer-requests}" class="btn"
+                    >Demandes d'organisateur</a
+                  >
+                </div>
+
+                <!-- Lien pour demander à être organisateur -->
+                <div
+                  th:if="${!#lists.contains(userRoles, 'ORGANISATEUR') && canRequestOrganizerRole}"
+                  style="margin-top: 1rem"
+                >
+                  <a th:href="@{/user/request-organizer}" class="btn"
+                    >Devenir organisateur</a
+                  >
+                </div>
+
+                <!-- Message si demande en attente -->
+                <div
+                  th:if="${!#lists.contains(userRoles, 'ORGANISATEUR') && !canRequestOrganizerRole}"
+                  style="margin-top: 1rem"
+                >
+                  <p class="alert alert-info">
+                    Votre demande pour devenir organisateur est en attente de
+                    validation.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Prochaines courses inscrites -->
+      <div class="card" style="margin-bottom: 2rem">
+        <div class="card-header">
+          <h2>Mes prochaines courses</h2>
+        </div>
+        <div class="card-body">
+          <div
+            class="alert alert-info"
+            th:if="${#lists.isEmpty(participations)}"
+          >
+            Vous n'êtes inscrit à aucune course pour le moment.
+            <a th:href="@{/courses}" class="btn" style="margin-left: 1rem"
+              >Voir les courses disponibles</a
+            >
+          </div>
+
+          <div th:unless="${#lists.isEmpty(participations)}">
+            <table>
+              <thead>
+                <tr>
+                  <th>Course</th>
+                  <th>Date</th>
+                  <th>Lieu</th>
+                  <th>N° dossard</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="participation : ${participations}">
+                  <td th:text="${participation.course.nom}">Nom course</td>
+                  <td
+                    th:text="${#dates.format(participation.course.dateCourse, 'dd/MM/yyyy')}"
+                  >
+                    Date
+                  </td>
+                  <td th:text="${participation.course.ville}">Ville</td>
+                  <td th:text="${participation.numeroDossard}">Dossard</td>
+                  <td>
+                    <a
+                      th:href="@{'/courses/' + ${participation.idCourse}}"
+                      class="btn btn-secondary"
+                      >Détails</a
+                    >
+                    <a
+                      th:href="@{'/participations/bib/' + ${participation.idParticipation}}"
+                      class="btn"
+                      >Dossard</a
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div style="text-align: center; margin-top: 1rem">
+              <a th:href="@{/participations}" class="btn"
+                >Voir toutes mes participations</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mes courses (si organisateur) -->
+      <div class="card" th:if="${#lists.contains(userRoles, 'ORGANISATEUR')}">
+        <div class="card-header">
+          <h2>Mes courses organisées</h2>
+        </div>
+        <div class="card-body">
+          <div
+            class="alert alert-info"
+            th:if="${#lists.isEmpty(coursesOrganisees)}"
+          >
+            Vous n'avez pas encore créé de course.
+            <a
+              th:href="@{/organisateur/courses/create}"
+              class="btn"
+              style="margin-left: 1rem"
+              >Créer une course</a
+            >
+          </div>
+
+          <div th:unless="${#lists.isEmpty(coursesOrganisees)}">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Date</th>
+                  <th>Ville</th>
+                  <th>Participants</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="course : ${coursesOrganisees}">
+                  <td th:text="${course.nom}">Nom course</td>
+                  <td
+                    th:text="${#dates.format(course.dateCourse, 'dd/MM/yyyy')}"
+                  >
+                    Date
+                  </td>
+                  <td th:text="${course.ville}">Ville</td>
+                  <td
+                    th:text="${course.nbInscrits + '/' + course.nbMaxParticipants}"
+                  >
+                    Participants
+                  </td>
+                  <td>
+                    <a
+                      th:href="@{'/courses/' + ${course.idCourse}}"
+                      class="btn btn-secondary"
+                      >Détails</a
+                    >
+                    <a
+                      th:href="@{'/organisateur/courses/edit/' + ${course.idCourse}}"
+                      class="btn"
+                      >Modifier</a
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div style="text-align: center; margin-top: 1rem">
+              <a th:href="@{/organisateur/courses}" class="btn"
+                >Gérer mes courses</a
+              >
+              <a th:href="@{/organisateur/courses/create}" class="btn"
+                >Créer une nouvelle course</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+  </body>
+</html>

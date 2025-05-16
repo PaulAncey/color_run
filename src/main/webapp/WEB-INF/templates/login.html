@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connexion - Color Run</title>
+    <link rel="stylesheet" th:href="@{/resources/css/main.css}" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <!-- Main content -->
+    <div class="container">
+      <div class="form-container">
+        <h1 class="form-title">Connexion</h1>
+
+        <!-- Message d'erreur -->
+        <div
+          class="alert alert-danger"
+          th:if="${error}"
+          th:text="${error}"
+        ></div>
+
+        <!-- Formulaire de connexion -->
+        <form th:action="@{/login}" method="post">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" name="password" required />
+          </div>
+
+          <button type="submit" class="btn btn-block">Se connecter</button>
+
+          <div style="margin-top: 1rem; text-align: center">
+            <p>
+              Pas encore de compte ? <a th:href="@{/register}">S'inscrire</a>
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+  </body>
+</html>

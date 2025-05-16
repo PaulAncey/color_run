@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Devenir organisateur - Color Run</title>
+    <link rel="stylesheet" th:href="@{/resources/css/main.css}" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <!-- Main content -->
+    <div class="container">
+      <div class="form-container" style="max-width: 700px">
+        <h1 class="form-title">Devenir organisateur</h1>
+
+        <!-- Alertes -->
+        <div
+          class="alert alert-danger"
+          th:if="${error}"
+          th:text="${error}"
+        ></div>
+
+        <!-- Introduction -->
+        <div style="margin-bottom: 2rem">
+          <p>
+            Vous souhaitez organiser vos propres Color Runs ? Devenez
+            organisateur officiel et profitez de notre plateforme pour gérer vos
+            événements.
+          </p>
+          <p>
+            Pour cela, nous vous demandons de remplir ce formulaire de demande.
+            Notre équipe examinera votre candidature et vous répondra dans les
+            plus brefs délais.
+          </p>
+        </div>
+
+        <!-- Formulaire de demande -->
+        <form th:action="@{/user/request-organizer}" method="post">
+          <div class="form-group">
+            <label for="motif"
+              >Pourquoi souhaitez-vous devenir organisateur ?</label
+            >
+            <textarea id="motif" name="motif" required rows="10"></textarea>
+            <small
+              >Expliquez vos motivations, votre expérience dans l'organisation
+              d'événements, vos idées pour de futures courses, etc.</small
+            >
+          </div>
+
+          <button type="submit" class="btn btn-block">
+            Soumettre ma demande
+          </button>
+
+          <div style="margin-top: 1rem; font-size: 0.9rem; color: #6c757d">
+            <p>
+              Après soumission, votre demande sera examinée par notre équipe.
+              Vous recevrez une notification par email dès qu'elle sera traitée.
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+  </body>
+</html>

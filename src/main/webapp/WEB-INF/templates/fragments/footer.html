@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <footer th:fragment="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h3>Color Run</h3>
+            <p>
+              Rejoignez-nous pour des courses hautes en couleur et pleines de
+              bonne humeur !
+            </p>
+          </div>
+          <div class="footer-section">
+            <h3>Liens rapides</h3>
+            <ul>
+              <li><a th:href="@{/}">Accueil</a></li>
+              <li><a th:href="@{/courses}">Courses</a></li>
+              <li><a th:href="@{/about}">À propos</a></li>
+              <li><a th:href="@{/contact}">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h3>Contact</h3>
+            <p>Email: info@colorrun.fr</p>
+            <p>Téléphone: 01 23 45 67 89</p>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2025 Color Run - Tous droits réservés</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

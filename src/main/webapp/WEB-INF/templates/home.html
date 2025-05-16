@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accueil - Color Run</title>
+    <link rel="stylesheet" th:href="@{/resources/css/main.css}" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <!-- Hero Banner -->
+    <section class="hero">
+      <div class="container">
+        <h1>Bienvenue sur Color Run</h1>
+        <p>Découvrez les courses colorées les plus fun de France !</p>
+        <div class="hero-buttons">
+          <a th:href="@{/courses}" class="btn">Voir les courses</a>
+          <a
+            th:if="${session.user == null}"
+            th:href="@{/register}"
+            class="btn btn-secondary"
+            >S'inscrire</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- Courses à venir -->
+    <section>
+      <div class="container">
+        <h2>Prochaines courses</h2>
+
+        <div class="alert alert-info" th:if="${upcomingCourses.empty}">
+          Aucune course à venir pour le moment.
+        </div>
+
+        <div class="grid" th:unless="${upcomingCourses.empty}">
+          <div class="card course-card" th:each="course : ${upcomingCourses}">
+            <div class="card-body">
+              <div class="course-info">
+                <div
+                  class="course-date"
+                  th:text="${#dates.format(course.dateCourse, 'dd MMMM yyyy')}"
+                >
+                  Date
+                </div>
+                <h3 class="card-title" th:text="${course.nom}">
+                  Nom de la course
+                </h3>
+                <div class="course-location" th:text="${course.ville}">
+                  Ville
+                </div>
+                <div class="course-details">
+                  <span th:text="${course.distanceKm + ' km'}">Distance</span>
+                  <span th:text="${course.prix + ' €'}">Prix</span>
+                </div>
+              </div>
+              <div class="course-actions">
+                <a th:href="@{'/courses/' + ${course.idCourse}}" class="btn"
+                  >Détails</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 1.5rem">
+          <a th:href="@{/courses}" class="btn">Voir toutes les courses</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section>
+      <div class="container">
+        <h2>Qu'est-ce qu'une Color Run ?</h2>
+        <div style="display: flex; gap: 2rem; flex-wrap: wrap">
+          <div style="flex: 1; min-width: 300px">
+            <p>
+              Les Color Runs sont des courses festives et colorées où les
+              participants sont aspergés de poudre colorée à différentes étapes
+              du parcours. Il ne s'agit pas d'une compétition, mais d'un moment
+              de partage et de plaisir accessible à tous.
+            </p>
+            <p>
+              Que vous soyez coureur expérimenté ou débutant, seul, en famille
+              ou entre amis, les Color Runs sont ouvertes à tous ceux qui
+              souhaitent passer un bon moment tout en faisant de l'exercice.
+            </p>
+          </div>
+          <div style="flex: 1; min-width: 300px">
+            <img
+              src="https://via.placeholder.com/500x300"
+              alt="Color Run"
+              style="width: 100%; border-radius: 5px"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section
+      style="
+        background-color: #ff5a5f;
+        color: white;
+        padding: 3rem 0;
+        margin-top: 3rem;
+      "
+    >
+      <div class="container" style="text-align: center">
+        <h2>Prêt à vivre l'expérience Color Run ?</h2>
+        <p>
+          Inscrivez-vous dès maintenant à l'une de nos courses et préparez-vous
+          à voir la vie en couleurs !
+        </p>
+        <a
+          th:href="@{/courses}"
+          class="btn"
+          style="background-color: white; color: #ff5a5f; margin-top: 1rem"
+          >Trouver une course</a
+        >
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+  </body>
+</html>

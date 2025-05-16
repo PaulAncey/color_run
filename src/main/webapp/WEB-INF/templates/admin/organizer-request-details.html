@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Traiter la demande - Color Run</title>
+    <link rel="stylesheet" th:href="@{/resources/css/main.css}" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <!-- Main content -->
+    <div class="container">
+      <h1>Traiter la demande d'organisateur</h1>
+
+      <!-- Alertes -->
+      <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+
+      <!-- Détails de la demande -->
+      <div class="card" style="margin-bottom: 2rem">
+        <div class="card-header">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
+            <div>
+              <h3
+                th:text="${demande.utilisateurNom + ' ' + demande.utilisateurPrenom}"
+              >
+                Nom utilisateur
+              </h3>
+              <div th:text="${demande.utilisateurEmail}">Email</div>
+            </div>
+            <div>
+              <span
+                class="badge"
+                th:text="${demande.statut}"
+                th:style="${demande.statut == 'EN_ATTENTE' ? 'background-color: #007bff; color: white; padding: 0.5rem;' : 
+                                        (demande.statut == 'ACCEPTEE' ? 'background-color: #28a745; color: white; padding: 0.5rem;' : 'background-color: #dc3545; color: white; padding: 0.5rem;')}"
+              >
+                Statut
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div style="margin-bottom: 1rem">
+            <strong>Date de demande :</strong>
+            <span
+              th:text="${#dates.format(demande.dateDemande, 'dd/MM/yyyy HH:mm')}"
+              >Date</span
+            >
+          </div>
+
+          <div style="margin-bottom: 1.5rem">
+            <h4>Motif de la demande :</h4>
+            <div
+              style="
+                background-color: #f8f9fa;
+                padding: 1rem;
+                border-radius: 5px;
+                white-space: pre-line;
+              "
+              th:text="${demande.motif}"
+            >
+              Motif
+            </div>
+          </div>
+
+          <!-- Formulaire de traitement -->
+          <form
+            th:if="${demande.statut == 'EN_ATTENTE'}"
+            th:action="@{'/admin/organizer-requests/' + ${demande.idDemande}}"
+            method="post"
+          >
+            <div class="form-group">
+              <label for="commentaire">Commentaire :</label>
+              <textarea id="commentaire" name="commentaire" required></textarea>
+              <small>Expliquez les raisons de votre décision.</small>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem">
+              <button
+                type="submit"
+                name="action"
+                value="ACCEPTEE"
+                class="btn"
+                style="flex: 1; background-color: #28a745"
+              >
+                Accepter
+              </button>
+              <button
+                type="submit"
+                name="action"
+                value="REFUSEE"
+                class="btn"
+                style="flex: 1; background-color: #dc3545"
+              >
+                Refuser
+              </button>
+            </div>
+          </form>
+
+          <!-- Commentaire admin si déjà traité -->
+          <div
+            th:if="${demande.statut != 'EN_ATTENTE'}"
+            style="margin-bottom: 1rem"
+          >
+            <h4>Commentaire de l'administrateur :</h4>
+            <div
+              style="
+                background-color: #f8f9fa;
+                padding: 1rem;
+                border-radius: 5px;
+                white-space: pre-line;
+              "
+              th:text="${demande.commentaireAdmin}"
+            >
+              Commentaire
+            </div>
+            <div style="margin-top: 0.5rem">
+              <strong>Traité le :</strong>
+              <span
+                th:text="${#dates.format(demande.dateTraitement, 'dd/MM/yyyy HH:mm')}"
+                >Date traitement</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bouton retour -->
+      <div style="text-align: center">
+        <a th:href="@{/admin/organizer-requests}" class="btn btn-secondary"
+          >Retour à la liste</a
+        >
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+  </body>
+</html>
