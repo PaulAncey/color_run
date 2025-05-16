@@ -18,6 +18,7 @@
         <junit.version>5.11.0</junit.version>
     </properties>
 
+
     <dependencies>
         <dependency>
             <groupId>jakarta.servlet</groupId>
@@ -56,6 +57,15 @@
     </dependencies>
     <build>
         <plugins>
+            <plugin>
+        <groupId>org.apache.tomcat.maven</groupId>
+        <artifactId>tomcat7-maven-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+            <port>8080</port>
+            <path>/color-run</path>
+        </configuration>
+    </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
