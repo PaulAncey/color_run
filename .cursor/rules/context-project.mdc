@@ -1,0 +1,20 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Contexte du projet
+
+Les **Color Run** sont des courses à pied festives de 5 kilomètres (et plus pour Rumton), sans chronométrage, où les participants, vêtus de blanc, sont aspergés de poudres colorées à chaque kilomètre. Inspirées des célébrations indiennes de Holi, ces courses mettent l'accent sur le plaisir, la convivialité et la célébration, plutôt que sur la performance sportive.
+
+Depuis leur création en 2012 aux États-Unis, les Color Run ont connu une expansion rapide à l'international. En France, des événements ont été organisés dans des villes comme Paris, Lyon, Marseille et Thionville. En Europe, des Color Run ont eu lieu dans des pays tels que le Royaume-Uni, l'Espagne, l'Allemagne et l'Italie, attirant des milliers de participants à chaque édition.
+
+Les Color Run attirent généralement des milliers de participants par événement. Par exemple, la première édition parisienne en 2014 a réuni environ 10 000 coureurs.
+
+Plus récemment, des éditions locales, comme celle de Val-d'Arc en 2024, ont rassemblé plus de 400 participants.
+
+Ces courses sont souvent organisées pour soutenir des causes caritatives. Les fonds récoltés peuvent être reversés à des associations œuvrant dans divers domaines, tels que la lutte contre le cancer, le soutien aux enfants hospitalisés ou d'autres projets sociaux et environnementaux.
+
+Le site que vous allez développer servira de plateforme pour lister les courses Color Run à venir, fournir des informations détaillées sur chaque événement, permettre les inscriptions et sensibiliser aux causes soutenues. Il offrira aux utilisateurs une interface intuitive pour découvrir les prochaines courses près de chez eux et s'y inscrire facilement.
+
+En participant à ce projet, vous contribuerez à promouvoir des événements qui allient sport, divertissement et engagement communautaire, tout en développant vos compétences en développement web et en conception d'interfaces utilisateur. (et surtout vous boostez vos compétences)

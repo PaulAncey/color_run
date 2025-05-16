@@ -11,21 +11,21 @@ import jakarta.servlet.annotation.WebListener;
  */
 @WebListener
 public class AppInitListener implements ServletContextListener {
-    
+
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext servletContext = sce.getServletContext();
-        
+
         // Initialiser Thymeleaf
         ThymeleafUtil.init(servletContext);
-        
+
         // Initialiser d'autres composants si nécessaire
         // ...
-        
+
         // Afficher un message au démarrage
         servletContext.log("Application Color Run démarrée avec succès !");
     }
-    
+
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         // Nettoyage des ressources si nécessaire
