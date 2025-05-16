@@ -1,6 +1,7 @@
 package fr.esgi.color_run.config;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
@@ -11,11 +12,24 @@ import java.util.stream.Collectors;
 
 public class DatabaseConfig {
     // Configuration de la base de données H2
-    private static final String JDBC_URL = "jdbc:h2:~/colorrun;AUTO_SERVER=TRUE";
+    private static final String DB_NAME = "colorrun";
     private static final String USER = "sa";
     private static final String PASSWORD = "";
     
+    // Construire l'URL avec le chemin absolu
+    private static final String JDBC_URL = "jdbc:h2:" + getTempDbPath() + ";AUTO_SERVER=TRUE";
+    
     private static boolean initialized = false;
+
+    /**
+     * Obtient le chemin absolu pour la base de données dans le répertoire temporaire
+     */
+    private static String getTempDbPath() {
+        String tempDir = System.getProperty("java.io.tmpdir");
+        String dbPath = new File(tempDir, DB_NAME).getAbsolutePath();
+        System.out.println("Chemin de la base de données: " + dbPath);
+        return dbPath;
+    }
 
     static {
         try {
@@ -48,7 +62,7 @@ public class DatabaseConfig {
             // Charger le script SQL depuis les ressources
             InputStream is = DatabaseConfig.class.getClassLoader().getResourceAsStream("database/schema.sql");
             if (is == null) {
-                throw new RuntimeException("Le fichier schema.sql est introuvable");
+                throw new RuntimeException("Le fichier schema.sql est introuvable à: database/schema.sql");
             }
             
             String sql = new BufferedReader(new InputStreamReader(is))
@@ -56,14 +70,12 @@ public class DatabaseConfig {
                     .collect(Collectors.joining("\n"));
             
             stmt.execute(sql);
-            
             System.out.println("Base de données initialisée avec succès");
             
         } catch (SQLException e) {
-            throw new RuntimeException("Erreur lors de l'initialisation de la base de données", e);
+            throw new RuntimeException("Erreur lors de l'initialisation de la base de données: " + e.getMessage(), e);
         }
     }
-    
 
     public static void closeResources(AutoCloseable... resources) {
         for (AutoCloseable resource : resources) {
