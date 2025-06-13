@@ -94,20 +94,23 @@
 
           <!-- Lien pour demander à être organisateur -->
           <div
-            th:if="${!#lists.contains(userRoles, 'ORGANISATEUR') && canRequestOrganizerRole}"
+            th:if="${userRoles == null or not #lists.contains(userRoles, 'ORGANISATEUR')}"
             style="margin-top: 1rem"
           >
-            <a th:href="@{/user/request-organizer}" class="btn"
+            <a
+              th:if="${canRequestOrganizerRole}"
+              th:href="@{/user/request-organizer}"
+              class="btn"
               >Devenir organisateur</a
             >
           </div>
 
           <!-- Message si demande en attente -->
           <div
-            th:if="${!#lists.contains(userRoles, 'ORGANISATEUR') && !canRequestOrganizerRole}"
+            th:if="${userRoles == null or not #lists.contains(userRoles, 'ORGANISATEUR')}"
             style="margin-top: 1rem"
           >
-            <p class="alert alert-info">
+            <p th:if="${!canRequestOrganizerRole}" class="alert alert-info">
               Votre demande pour devenir organisateur est en attente de
               validation.
             </p>

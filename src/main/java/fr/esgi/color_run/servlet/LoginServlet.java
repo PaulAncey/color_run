@@ -1,5 +1,6 @@
 package fr.esgi.color_run.servlet;
 
+import fr.esgi.color_run.business.Role;
 import fr.esgi.color_run.business.Utilisateur;
 import fr.esgi.color_run.config.ServiceFactory;
 import fr.esgi.color_run.service.ServiceException;
@@ -14,11 +15,12 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 /**
- * Servlet pour gérer la connexion des utilisateurs (avec Thymeleaf)
+ * Servlet pour gérer la connexion des utilisateurs
  */
 @WebServlet(name = "loginServlet", urlPatterns = {"/login"})
 public class LoginServlet extends HttpServlet {
@@ -27,7 +29,7 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        // Initialiser le service utilisateur
+        // Initialiser le service utilisateur depuis la factory
         utilisateurService = ServiceFactory.getInstance().getUtilisateurService();
     }
 
@@ -40,11 +42,8 @@ public class LoginServlet extends HttpServlet {
             return;
         }
         
-        // Préparer les variables pour le template
+        // Afficher le formulaire de connexion
         Map<String, Object> variables = new HashMap<>();
-        variables.put("pageTitle", "Connexion - Color Run");
-        
-        // Traiter le template et envoyer la réponse
         ThymeleafUtil.processTemplate("login", variables, request, response);
     }
 
@@ -57,12 +56,8 @@ public class LoginServlet extends HttpServlet {
         
         // Validation des données
         if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()) {
-            // Préparer les variables pour le template
             Map<String, Object> variables = new HashMap<>();
-            variables.put("pageTitle", "Connexion - Color Run");
             variables.put("error", "Email et mot de passe requis");
-            
-            // Traiter le template et envoyer la réponse
             ThymeleafUtil.processTemplate("login", variables, request, response);
             return;
         }
@@ -78,8 +73,11 @@ public class LoginServlet extends HttpServlet {
                 if (optUser.isPresent()) {
                     Utilisateur user = optUser.get();
                     
-                    // Créer la session utilisateur
-                    SessionUtil.createUserSession(request, user);
+                    // Récupérer les rôles de l'utilisateur
+                    List<Role> userRoles = utilisateurService.obtenirRolesUtilisateur(user.getIdUtilisateur());
+                    
+                    // Créer la session utilisateur avec les rôles
+                    SessionUtil.createUserSession(request, user, userRoles);
                     
                     // Rediriger vers le tableau de bord
                     response.sendRedirect(request.getContextPath() + "/dashboard");
@@ -89,20 +87,14 @@ public class LoginServlet extends HttpServlet {
             } else {
                 // Identifiants incorrects
                 Map<String, Object> variables = new HashMap<>();
-                variables.put("pageTitle", "Connexion - Color Run");
                 variables.put("error", "Email ou mot de passe incorrect");
-                
-                // Traiter le template et envoyer la réponse
                 ThymeleafUtil.processTemplate("login", variables, request, response);
             }
             
         } catch (ServiceException e) {
             // Gérer l'erreur
             Map<String, Object> variables = new HashMap<>();
-            variables.put("pageTitle", "Connexion - Color Run");
             variables.put("error", "Une erreur est survenue lors de la connexion: " + e.getMessage());
-            
-            // Traiter le template et envoyer la réponse
             ThymeleafUtil.processTemplate("login", variables, request, response);
         }
     }

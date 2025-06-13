@@ -1,13 +1,12 @@
 package fr.esgi.color_run.servlet;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import fr.esgi.color_run.business.Course;
+import fr.esgi.color_run.business.Message;
+import fr.esgi.color_run.business.Participation;
+import fr.esgi.color_run.config.ServiceFactory;
 import fr.esgi.color_run.service.CourseService;
+import fr.esgi.color_run.service.MessageService;
+import fr.esgi.color_run.service.ParticipationService;
 import fr.esgi.color_run.service.ServiceException;
 import fr.esgi.color_run.util.SessionUtil;
 import fr.esgi.color_run.util.ThymeleafUtil;
@@ -17,6 +16,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 /**
  * Servlet pour gérer les courses (listing, détails, recherche)
  */
@@ -24,12 +29,16 @@ import jakarta.servlet.http.HttpServletResponse;
 public class CourseServlet extends HttpServlet {
 
     private CourseService courseService;
+    private ParticipationService participationService;
+    private MessageService messageService;
 
     @Override
     public void init() throws ServletException {
-        // Initialiser le service course
-        // Dans une application réelle, utiliser l'injection de dépendances
-        // courseService = new CourseServiceImpl(new CourseDAOImpl());
+        // Initialiser les services
+        ServiceFactory serviceFactory = ServiceFactory.getInstance();
+        courseService = serviceFactory.getCourseService();
+        participationService = serviceFactory.getParticipationService();
+        messageService = serviceFactory.getMessageService();
     }
 
     @Override
@@ -46,14 +55,16 @@ public class CourseServlet extends HttpServlet {
                 // Détails d'une course spécifique
                 showCourseDetails(request, response);
             } else {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                // Gérer l'erreur 404
+                Map<String, Object> variables = new HashMap<>();
+                variables.put("error", "Page non trouvée");
+                ThymeleafUtil.processTemplate("error", variables, request, response);
             }
         } catch (ServiceException e) {
             // Gérer l'erreur
-            request.setAttribute("error", "Une erreur est survenue: " + e.getMessage());
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("error", "Une erreur est survenue: " + e.getMessage());
-        ThymeleafUtil.processTemplate("error", variables, request, response);
+            Map<String, Object> variables = new HashMap<>();
+            variables.put("error", "Une erreur est survenue: " + e.getMessage());
+            ThymeleafUtil.processTemplate("error", variables, request, response);
         }
     }
 
@@ -78,10 +89,11 @@ public class CourseServlet extends HttpServlet {
             courses = courseService.trouverCoursesAVenir();
         }
         
-        // Passer les données à la vue
-        request.setAttribute("courses", courses);
+        // Préparer les données pour la vue
         Map<String, Object> variables = new HashMap<>();
-        variables.put("error", "Une erreur est survenue");
+        variables.put("courses", courses);
+        
+        // Traiter le template
         ThymeleafUtil.processTemplate("courses/list", variables, request, response);
     }
 
@@ -96,26 +108,55 @@ public class CourseServlet extends HttpServlet {
         int courseId = Integer.parseInt(pathInfo.substring(1));
         
         // Récupérer les détails de la course
-        Optional<Course> course = courseService.trouverParId(courseId);
+        Optional<Course> optCourse = courseService.trouverParId(courseId);
         
-        if (course.isPresent()) {
-            request.setAttribute("course", course.get());
+        if (optCourse.isPresent()) {
+            Course course = optCourse.get();
+            
+            // Récupérer le nombre d'inscrits
+            int nbInscrits = participationService.compterParticipants(courseId);
+            boolean estComplete = participationService.courseEstComplete(courseId);
+            
+            // Récupérer les messages
+            List<Message> messages = messageService.trouverParCourse(courseId);
             
             // Vérifier si l'utilisateur est connecté
+            boolean isOrganisateur = false;
+            boolean isInscrit = false;
+            Participation participation = null;
+            
             Integer userId = SessionUtil.getUserIdFromSession(request);
             if (userId != null) {
                 // Vérifier si l'utilisateur est l'organisateur
-                boolean isOrganisateur = courseService.estOrganisateur(userId, courseId);
-                request.setAttribute("isOrganisateur", isOrganisateur);
+                isOrganisateur = courseService.estOrganisateur(userId, courseId);
                 
-                // D'autres vérifications pourraient être ajoutées ici
+                // Vérifier si l'utilisateur est inscrit
+                Optional<Participation> optParticipation = participationService.trouverParUtilisateurEtCourse(userId, courseId);
+                isInscrit = optParticipation.isPresent();
+                if (isInscrit) {
+                    participation = optParticipation.get();
+                }
             }
             
+            // Préparer les données pour la vue
             Map<String, Object> variables = new HashMap<>();
-            variables.put("error", "Une erreur est survenue");
+            variables.put("course", course);
+            variables.put("nbInscrits", nbInscrits);
+            variables.put("estComplete", estComplete);
+            variables.put("messages", messages);
+            variables.put("isOrganisateur", isOrganisateur);
+            variables.put("isInscrit", isInscrit);
+            variables.put("participation", participation);
+            variables.put("error", request.getParameter("error"));
+            variables.put("success", request.getParameter("success"));
+            
+            // Traiter le template
             ThymeleafUtil.processTemplate("courses/details", variables, request, response);
         } else {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Course non trouvée");
+            // Course non trouvée
+            Map<String, Object> variables = new HashMap<>();
+            variables.put("error", "Course non trouvée");
+            ThymeleafUtil.processTemplate("error", variables, request, response);
         }
     }
 
