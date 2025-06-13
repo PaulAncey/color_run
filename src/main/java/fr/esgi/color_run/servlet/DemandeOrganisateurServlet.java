@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import fr.esgi.color_run.business.DemandeOrganisateur;
+import fr.esgi.color_run.config.ServiceFactory;
 import fr.esgi.color_run.service.DemandeOrganisateurService;
 import fr.esgi.color_run.service.ServiceException;
 import fr.esgi.color_run.service.UtilisateurService;
@@ -33,10 +34,10 @@ public class DemandeOrganisateurServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        // Initialiser les services
-        // Dans une application réelle, utiliser l'injection de dépendances
-        // demandeOrganisateurService = new DemandeOrganisateurServiceImpl(...);
-        // utilisateurService = new UtilisateurServiceImpl(...);
+        // Initialiser les services avec ServiceFactory
+        ServiceFactory serviceFactory = ServiceFactory.getInstance();
+        demandeOrganisateurService = serviceFactory.getDemandeOrganisateurService();
+        utilisateurService = serviceFactory.getUtilisateurService();
     }
 
     @Override
@@ -70,7 +71,7 @@ public class DemandeOrganisateurServlet extends HttpServlet {
                         
             Map<String, Object> variables = new HashMap<>();
             variables.put("error", "Une erreur est survenue : " + e.getMessage());
-            ThymeleafUtil.processTemplate("courses/details", variables, request, response);
+            ThymeleafUtil.processTemplate("error", variables, request, response);
         }
     }
     
@@ -101,7 +102,7 @@ public class DemandeOrganisateurServlet extends HttpServlet {
             request.setAttribute("error", "Une erreur est survenue: " + e.getMessage());
             Map<String, Object> variables = new HashMap<>();
             variables.put("error", "Une erreur est survenue : " + e.getMessage());
-            ThymeleafUtil.processTemplate("courses/details", variables, request, response);
+            ThymeleafUtil.processTemplate("error", variables, request, response);
         }
     }
 
@@ -120,10 +121,10 @@ public class DemandeOrganisateurServlet extends HttpServlet {
             Map<String, Object> variables = new HashMap<>();
             variables.put("error", "Une erreur est survenue");
             ThymeleafUtil.processTemplate("user/profile", variables, request, response);
+            return;
         }
         
         Map<String, Object> variables = new HashMap<>();
-        variables.put("error", "Une erreur est survenue");
         ThymeleafUtil.processTemplate("user/request-organizer", variables, request, response);
     }
 
@@ -141,7 +142,7 @@ public class DemandeOrganisateurServlet extends HttpServlet {
             request.setAttribute("error", "Le motif de la demande est obligatoire");
 
             Map<String, Object> variables = new HashMap<>();
-            variables.put("error", "Une erreur est survenue");
+            variables.put("error", "Le motif de la demande est obligatoire");
             ThymeleafUtil.processTemplate("user/request-organizer", variables, request, response);
             return;
         }
@@ -150,7 +151,7 @@ public class DemandeOrganisateurServlet extends HttpServlet {
         if (!demandeOrganisateurService.peutDemanderRole(userId)) {
             request.setAttribute("error", "Vous ne pouvez pas demander le rôle d'organisateur (demande en cours ou déjà organisateur)");
             Map<String, Object> variables = new HashMap<>();
-            variables.put("error", "Une erreur est survenue");
+            variables.put("error", "Vous ne pouvez pas demander le rôle d'organisateur");
             ThymeleafUtil.processTemplate("user/profile", variables, request, response);
             return;
         }
@@ -165,10 +166,7 @@ public class DemandeOrganisateurServlet extends HttpServlet {
         demandeOrganisateurService.creerDemande(demande);
         
         // Rediriger vers le profil avec un message de succès
-        request.setAttribute("success", "Votre demande a été soumise avec succès. Vous serez notifié de la décision.");
-        Map<String, Object> variables = new HashMap<>();
-            variables.put("error", "Une erreur est survenue");
-            ThymeleafUtil.processTemplate("user/profile", variables, request, response);
+        response.sendRedirect(request.getContextPath() + "/dashboard?success=Votre demande a été soumise avec succès");
     }
 
     /**
@@ -187,10 +185,8 @@ public class DemandeOrganisateurServlet extends HttpServlet {
             demandes = demandeOrganisateurService.trouverParStatut("EN_ATTENTE");
         }
         
-        request.setAttribute("demandes", demandes);
-                    
         Map<String, Object> variables = new HashMap<>();
-        variables.put("error", "Une erreur est survenue");
+        variables.put("demandes", demandes);
         ThymeleafUtil.processTemplate("admin/organizer-requests", variables, request, response);
     }
 
@@ -208,10 +204,8 @@ public class DemandeOrganisateurServlet extends HttpServlet {
         Optional<DemandeOrganisateur> demande = demandeOrganisateurService.trouverParId(demandeId);
         
         if (demande.isPresent()) {
-            request.setAttribute("demande", demande.get());
-                        
             Map<String, Object> variables = new HashMap<>();
-            variables.put("error", "Une erreur est survenue");
+            variables.put("demande", demande.get());
             ThymeleafUtil.processTemplate("admin/organizer-request-details", variables, request, response);
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Demande non trouvée");
@@ -250,7 +244,6 @@ public class DemandeOrganisateurServlet extends HttpServlet {
         }
         
         // Rediriger vers la liste des demandes avec un message de succès
-        request.setAttribute("success", "La demande a été traitée avec succès");
-        response.sendRedirect(request.getContextPath() + "/admin/organizer-requests");
+        response.sendRedirect(request.getContextPath() + "/admin/organizer-requests?success=La demande a été traitée avec succès");
     }
 }

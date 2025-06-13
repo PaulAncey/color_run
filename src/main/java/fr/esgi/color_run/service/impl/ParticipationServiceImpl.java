@@ -1,11 +1,13 @@
 package fr.esgi.color_run.service.impl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import fr.esgi.color_run.business.Course;
 import fr.esgi.color_run.business.Participation;
+import fr.esgi.color_run.business.ParticipationWithCourse;
 import fr.esgi.color_run.business.Utilisateur;
 import fr.esgi.color_run.dao.CourseDAO;
 import fr.esgi.color_run.dao.DAOException;
@@ -87,6 +89,25 @@ public class ParticipationServiceImpl implements ParticipationService {
             return participationDAO.findByUserId(idUtilisateur);
         } catch (DAOException e) {
             throw new ServiceException("Erreur lors de la recherche des participations par utilisateur", e);
+        }
+    }
+
+    @Override
+    public List<ParticipationWithCourse> trouverParUtilisateurAvecCourse(int idUtilisateur) throws ServiceException {
+        try {
+            List<Participation> participations = participationDAO.findByUserId(idUtilisateur);
+            List<ParticipationWithCourse> result = new ArrayList<>();
+            
+            for (Participation participation : participations) {
+                Optional<Course> course = courseDAO.findById(participation.getIdCourse());
+                if (course.isPresent()) {
+                    result.add(ParticipationWithCourse.from(participation, course.get()));
+                }
+            }
+            
+            return result;
+        } catch (DAOException e) {
+            throw new ServiceException("Erreur lors de la recherche des participations avec courses par utilisateur", e);
         }
     }
 

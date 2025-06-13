@@ -17,10 +17,14 @@
       <!-- Alertes -->
       <div
         class="alert alert-success"
-        th:if="${success}"
-        th:text="${success}"
+        th:if="${param.success != null and !param.success[0].isEmpty()}"
+        th:text="${param.success[0]}"
       ></div>
-      <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+      <div
+        class="alert alert-danger"
+        th:if="${param.error != null and !param.error[0].isEmpty()}"
+        th:text="${param.error[0]}"
+      ></div>
 
       <!-- Détails de la course -->
       <div class="card">
