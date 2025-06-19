@@ -1,8 +1,8 @@
 package fr.esgi.color_run.util;
 
 import fr.esgi.color_run.business.Utilisateur;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * Utilitaire pour gérer les données de session

@@ -1,10 +1,10 @@
 package fr.esgi.color_run.config;
 
 import fr.esgi.color_run.util.ThymeleafUtil;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletContextEvent;
-import jakarta.servlet.ServletContextListener;
-import jakarta.servlet.annotation.WebListener;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
 
 /**
  * Listener pour initialiser l'application au démarrage
