@@ -3,11 +3,14 @@ package fr.esgi.color_run.servlet;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import fr.esgi.color_run.business.Course;
 import fr.esgi.color_run.business.Participation;
+import fr.esgi.color_run.business.ParticipationWithCourse;
+import fr.esgi.color_run.config.ServiceFactory;
 import fr.esgi.color_run.service.CourseService;
 import fr.esgi.color_run.service.ParticipationService;
 import fr.esgi.color_run.service.ServiceException;
@@ -37,11 +40,11 @@ public class ParticipationServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        // Initialiser les services
-        // Dans une application réelle, utiliser l'injection de dépendances
-        // participationService = new ParticipationServiceImpl(...);
-        // courseService = new CourseServiceImpl(...);
-        // utilisateurService = new UtilisateurServiceImpl(...);
+        // Initialiser les services avec ServiceFactory
+        ServiceFactory serviceFactory = ServiceFactory.getInstance();
+        participationService = serviceFactory.getParticipationService();
+        courseService = serviceFactory.getCourseService();
+        utilisateurService = serviceFactory.getUtilisateurService();
     }
 
     @Override
@@ -60,15 +63,40 @@ public class ParticipationServlet extends HttpServlet {
             if (pathInfo.endsWith("/participations")) {
                 // Liste des participations de l'utilisateur
                 listUserParticipations(request, response);
-            } else if (pathInfo.matches(".*/participations/register/\\d+")) {
+            } else if (pathInfo.matches(".*/participations/bib/\\d+")) {
+                // Téléchargement du dossard
+                downloadBib(request, response);
+            } else {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            }
+        } catch (ServiceException e) {
+            // Gérer l'erreur
+            request.setAttribute("error", "Une erreur est survenue: " + e.getMessage());
+            Map<String, Object> variables = new HashMap<>();
+                variables.put("error", "Une erreur est survenue : " + e.getMessage());
+                ThymeleafUtil.processTemplate("error", variables, request, response);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        // Vérifier si l'utilisateur est connecté
+        if (!SessionUtil.isUserLoggedIn(request)) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+        
+        String pathInfo = request.getRequestURI();
+        
+        try {
+            if (pathInfo.matches(".*/participations/register/\\d+")) {
                 // Inscription à une course
                 registerToCourse(request, response);
             } else if (pathInfo.matches(".*/participations/cancel/\\d+")) {
                 // Annulation d'une inscription
                 cancelRegistration(request, response);
-            } else if (pathInfo.matches(".*/participations/bib/\\d+")) {
-                // Téléchargement du dossard
-                downloadBib(request, response);
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
@@ -89,12 +117,12 @@ public class ParticipationServlet extends HttpServlet {
         
         Integer userId = SessionUtil.getUserIdFromSession(request);
         
-        // Récupérer les participations de l'utilisateur
+        // Récupérer les participations de l'utilisateur avec les informations des courses
         try {
-            request.setAttribute("participations", participationService.trouverParUtilisateur(userId));
+            List<ParticipationWithCourse> participations = participationService.trouverParUtilisateurAvecCourse(userId);
 
             Map<String, Object> variables = new HashMap<>();
-            variables.put("error", "Une erreur est survenue");
+            variables.put("participations", participations);
             ThymeleafUtil.processTemplate("participations/list", variables, request, response);
         } catch (ServiceException e) {
             throw new ServiceException("Erreur lors de la récupération des participations", e);
@@ -123,26 +151,24 @@ public class ParticipationServlet extends HttpServlet {
             
             // Vérifier si l'utilisateur est déjà inscrit
             if (participationService.trouverParUtilisateurEtCourse(userId, courseId).isPresent()) {
-                request.setAttribute("error", "Vous êtes déjà inscrit à cette course");
-                response.sendRedirect(request.getContextPath() + "/courses/" + courseId);
+                response.sendRedirect(request.getContextPath() + "/courses/" + courseId + "?error=Vous êtes déjà inscrit à cette course");
                 return;
             }
             
             // Vérifier si la course est complète
             if (participationService.courseEstComplete(courseId)) {
-                request.setAttribute("error", "Cette course est complète");
-                response.sendRedirect(request.getContextPath() + "/courses/" + courseId);
+                response.sendRedirect(request.getContextPath() + "/courses/" + courseId + "?error=Cette course est complète");
                 return;
             }
             
             // Inscrire l'utilisateur
             participationService.inscrire(userId, courseId);
             
-            // Rediriger vers la liste des participations
-            response.sendRedirect(request.getContextPath() + "/participations");
+            // Rediriger vers la course avec un message de succès
+            response.sendRedirect(request.getContextPath() + "/courses/" + courseId + "?success=Inscription réussie ! Vous pouvez maintenant télécharger votre dossard.");
             
         } catch (ServiceException e) {
-            throw new ServiceException("Erreur lors de l'inscription à la course", e);
+            response.sendRedirect(request.getContextPath() + "/courses/" + courseId + "?error=Erreur lors de l'inscription : " + e.getMessage());
         }
     }
 
@@ -161,19 +187,18 @@ public class ParticipationServlet extends HttpServlet {
         try {
             // Vérifier si l'utilisateur est inscrit
             if (!participationService.trouverParUtilisateurEtCourse(userId, courseId).isPresent()) {
-                request.setAttribute("error", "Vous n'êtes pas inscrit à cette course");
-                response.sendRedirect(request.getContextPath() + "/participations");
+                response.sendRedirect(request.getContextPath() + "/participations?error=Vous n'êtes pas inscrit à cette course");
                 return;
             }
             
             // Annuler l'inscription
             participationService.annulerInscription(userId, courseId);
             
-            // Rediriger vers la liste des participations
-            response.sendRedirect(request.getContextPath() + "/participations");
+            // Rediriger vers la liste des participations avec message de succès
+            response.sendRedirect(request.getContextPath() + "/participations?success=Inscription annulée avec succès");
             
         } catch (ServiceException e) {
-            throw new ServiceException("Erreur lors de l'annulation de l'inscription", e);
+            response.sendRedirect(request.getContextPath() + "/participations?error=Erreur lors de l'annulation : " + e.getMessage());
         }
     }
 

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.esgi.color_run.business.Message;
+import fr.esgi.color_run.config.ServiceFactory;
 import fr.esgi.color_run.service.CourseService;
 import fr.esgi.color_run.service.MessageService;
 import fr.esgi.color_run.service.ServiceException;
@@ -29,10 +30,10 @@ public class MessageServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        // Initialiser les services
-        // Dans une application réelle, utiliser l'injection de dépendances
-        // messageService = new MessageServiceImpl(...);
-        // courseService = new CourseServiceImpl(...);
+        // Initialiser les services avec ServiceFactory
+        ServiceFactory serviceFactory = ServiceFactory.getInstance();
+        messageService = serviceFactory.getMessageService();
+        courseService = serviceFactory.getCourseService();
     }
 
     @Override
@@ -54,27 +55,21 @@ public class MessageServlet extends HttpServlet {
             // Récupérer les messages de la course
             List<Message> messages = messageService.trouverParCourse(courseId);
             
-            request.setAttribute("messages", messages);
-            request.setAttribute("courseId", courseId);
-            
             // Si c'est une requête AJAX, renvoyer uniquement les messages
             String requestedWith = request.getHeader("X-Requested-With");
             if (requestedWith != null && requestedWith.equals("XMLHttpRequest")) {
-
                 Map<String, Object> variables = new HashMap<>();
-                variables.put("error", "Une erreur est survenue");
+                variables.put("messages", messages);
                 ThymeleafUtil.processTemplate("messages/messages-list", variables, request, response);
             } else {
-
                 Map<String, Object> variables = new HashMap<>();
-                variables.put("error", "Une erreur est survenue");
+                variables.put("messages", messages);
+                variables.put("courseId", courseId);
                 ThymeleafUtil.processTemplate("messages/course-discussion", variables, request, response);
             }
             
         } catch (ServiceException e) {
             // Gérer l'erreur
-            request.setAttribute("error", "Une erreur est survenue: " + e.getMessage());
-            
             if (request.getHeader("X-Requested-With") != null) {
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 response.getWriter().write("Erreur: " + e.getMessage());
@@ -143,10 +138,8 @@ public class MessageServlet extends HttpServlet {
                 response.setContentType("application/json");
                 response.getWriter().write("{\"error\": \"" + e.getMessage() + "\"}");
             } else {
-                request.setAttribute("error", "Une erreur est survenue: " + e.getMessage());
-
                 Map<String, Object> variables = new HashMap<>();
-                variables.put("error", "Une erreur est survenue");
+                variables.put("error", "Une erreur est survenue : " + e.getMessage());
                 ThymeleafUtil.processTemplate("messages/course-discussion", variables, request, response);
             }
         }

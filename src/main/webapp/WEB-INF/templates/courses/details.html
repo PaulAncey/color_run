@@ -17,10 +17,14 @@
       <!-- Alertes -->
       <div
         class="alert alert-success"
-        th:if="${success}"
-        th:text="${success}"
+        th:if="${param.success != null and !param.success[0].isEmpty()}"
+        th:text="${param.success[0]}"
       ></div>
-      <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+      <div
+        class="alert alert-danger"
+        th:if="${param.error != null and !param.error[0].isEmpty()}"
+        th:text="${param.error[0]}"
+      ></div>
 
       <!-- Détails de la course -->
       <div class="card">
@@ -162,12 +166,45 @@
       <!-- Section messages -->
       <div class="card" style="margin-top: 2rem">
         <div class="card-header">
-          <h2>Discussion</h2>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
+            <h2>Discussion</h2>
+            <span
+              class="badge"
+              th:text="${#lists.size(messages)} + ' message(s)'"
+              style="
+                background-color: #ff5a5f;
+                color: white;
+                padding: 0.5rem;
+                border-radius: 15px;
+              "
+            >
+              Messages
+            </span>
+          </div>
         </div>
         <div class="card-body">
+          <!-- Debug info -->
+          <div
+            th:if="${messages != null}"
+            style="color: #6c757d; font-size: 0.9rem; margin-bottom: 1rem"
+          >
+            <span
+              th:text="'Messages chargés: ' + ${#lists.size(messages)}"
+            ></span>
+          </div>
+
           <!-- Liste des messages -->
           <div id="messages-container">
-            <div th:if="${#lists.isEmpty(messages)}" class="alert alert-info">
+            <div
+              th:if="${messages == null or #lists.isEmpty(messages)}"
+              class="alert alert-info"
+            >
               Aucun message pour le moment. Soyez le premier à écrire !
             </div>
 
@@ -183,7 +220,7 @@
                   margin-bottom: 0.5rem;
                 "
               >
-                <strong th:text="${message.utilisateurNom}"
+                <strong th:text="${message.utilisateurNomComplet}"
                   >Nom utilisateur</strong
                 >
                 <span

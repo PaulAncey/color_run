@@ -91,7 +91,10 @@ public class ServiceFactory {
     public synchronized MessageService getMessageService() {
         if (messageService == null) {
             DAOFactory daoFactory = DAOFactory.getInstance();
-            messageService = new MessageServiceImpl(daoFactory.getMessageDAO());
+            messageService = new MessageServiceImpl(
+                    daoFactory.getMessageDAO(),
+                    daoFactory.getUtilisateurDAO()
+            );
         }
         return messageService;
     }

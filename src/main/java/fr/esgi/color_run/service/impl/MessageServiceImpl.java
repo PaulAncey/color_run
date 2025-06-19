@@ -1,21 +1,27 @@
 package fr.esgi.color_run.service.impl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import fr.esgi.color_run.business.Message;
+import fr.esgi.color_run.business.MessageWithUser;
+import fr.esgi.color_run.business.Utilisateur;
 import fr.esgi.color_run.dao.DAOException;
 import fr.esgi.color_run.dao.MessageDAO;
+import fr.esgi.color_run.dao.UtilisateurDAO;
 import fr.esgi.color_run.service.MessageService;
 import fr.esgi.color_run.service.ServiceException;
 
 public class MessageServiceImpl implements MessageService {
 
     private final MessageDAO messageDAO;
+    private final UtilisateurDAO utilisateurDAO;
 
-    public MessageServiceImpl(MessageDAO messageDAO) {
+    public MessageServiceImpl(MessageDAO messageDAO, UtilisateurDAO utilisateurDAO) {
         this.messageDAO = messageDAO;
+        this.utilisateurDAO = utilisateurDAO;
     }
 
     @Override
@@ -60,6 +66,33 @@ public class MessageServiceImpl implements MessageService {
             return messageDAO.findByCourseId(idCourse);
         } catch (DAOException e) {
             throw new ServiceException("Erreur lors de la recherche des messages par course", e);
+        }
+    }
+
+    @Override
+    public List<MessageWithUser> trouverParCourseAvecUtilisateur(int idCourse) throws ServiceException {
+        try {
+            List<Message> messages = messageDAO.findByCourseId(idCourse);
+            List<MessageWithUser> result = new ArrayList<>();
+            
+            for (Message message : messages) {
+                Optional<Utilisateur> utilisateur = utilisateurDAO.findById(message.getIdUtilisateur());
+                if (utilisateur.isPresent()) {
+                    result.add(MessageWithUser.from(message, utilisateur.get()));
+                } else {
+                    // Si l'utilisateur n'existe plus, créer un utilisateur fictif
+                    Utilisateur userFictif = Utilisateur.builder()
+                            .nom("Inconnu")
+                            .prenom("Utilisateur")
+                            .email("inconnu@example.com")
+                            .build();
+                    result.add(MessageWithUser.from(message, userFictif));
+                }
+            }
+            
+            return result;
+        } catch (DAOException e) {
+            throw new ServiceException("Erreur lors de la recherche des messages avec utilisateurs par course", e);
         }
     }
 
