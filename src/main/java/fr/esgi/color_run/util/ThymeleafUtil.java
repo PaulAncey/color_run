@@ -67,6 +67,20 @@ public class ThymeleafUtil {
         context.setVariable("request", request);
         context.setVariable("contextPath", request.getContextPath());
 
+        // Ajouter les paramètres de requête pour OGNL (convertir String[] en String)
+        Map<String, String> simpleParams = new java.util.HashMap<>();
+        for (Map.Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
+            String[] values = entry.getValue();
+            if (values != null && values.length > 0) {
+                simpleParams.put(entry.getKey(), values[0]);
+            }
+        }
+        context.setVariable("param", simpleParams);
+
+        // Ajouter un helper pour les URLs relatives au contexte
+        String contextPath = request.getContextPath();
+        context.setVariable("contextUrl", (contextPath != null && !contextPath.isEmpty()) ? contextPath : "");
+
         // Extraire les attributs de session et les passer comme variables
         HttpSession session = request.getSession();
         context.setVariable("session", session);

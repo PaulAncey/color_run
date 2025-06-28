@@ -43,7 +43,7 @@
 
           <!-- Profil et déconnexion -->
           <li th:if="${sessionUser != null}" class="dropdown">
-            <a href="#" th:text="${sessionUser.prenom}">User</a>
+            <a href="|${contextUrl}/profile|" th:text="${sessionUser.prenom}">User</a>
             <div class="dropdown-content">
               <a th:href="|${contextPath}/profile|">Profil</a>
               <a th:href="|${contextPath}/logout|">Déconnexion</a>

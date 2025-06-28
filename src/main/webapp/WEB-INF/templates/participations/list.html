@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mes participations - Color Run</title>
-    <link rel="stylesheet" th:href="@{/resources/css/main.css}" />
+    <link rel="stylesheet" th:href="|${contextPath}/resources/css/main.css|" />
   </head>
   <body>
     <!-- Header -->
@@ -80,18 +80,18 @@
               "
             >
               <a
-                th:href="@{'/courses/' + ${participation.idCourse}}"
+                th:href="|${contextUrl}/courses/${participation.idCourse}|"
                 class="btn"
                 style="margin-bottom: 0.5rem"
                 >Détails & Discussion</a
               >
               <a
-                th:href="@{'/participations/bib/' + ${participation.idParticipation}}"
+                th:href="|${contextUrl}/participations/bib/${participation.idParticipation}|"
                 class="btn"
                 >Télécharger dossard</a
               >
               <form
-                th:action="@{'/participations/cancel/' + ${participation.idCourse}}"
+                th:action="|${contextUrl}/participations/cancel/${participation.idCourse}|"
                 method="post"
                 style="margin-top: 0.5rem"
               >
@@ -106,7 +106,7 @@
 
       <!-- Lien pour voir les courses -->
       <div style="text-align: center; margin-top: 2rem">
-        <a th:href="@{/courses}" class="btn">Voir toutes les courses</a>
+        <a th:href="|${contextUrl}/courses|" class="btn">Voir toutes les courses</a>
       </div>
     </div>
 
