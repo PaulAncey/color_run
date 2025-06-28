@@ -6,7 +6,7 @@
     <title th:text="${course.nom + ' - Color Run'}">
       Détails de la course - Color Run
     </title>
-    <link rel="stylesheet" th:href="@{/resources/css/main.css}" />
+    <link rel="stylesheet" th:href="|${contextPath}/resources/css/main.css|" />
   </head>
   <body>
     <!-- Header -->
@@ -95,10 +95,10 @@
 
               <!-- Actions -->
               <div
-                th:if="${session.user != null and !isOrganisateur and !isInscrit and !estComplete}"
+                th:if="${sessionUser != null and !isOrganisateur and !isInscrit and !estComplete}"
               >
                 <form
-                  th:action="@{'/participations/register/' + ${course.idCourse}}"
+                  th:action="|${contextPath}/participations/register/${course.idCourse}|"
                   method="post"
                 >
                   <button type="submit" class="btn btn-block">
@@ -107,19 +107,19 @@
                 </form>
               </div>
 
-              <div th:if="${session.user != null and isInscrit}">
+              <div th:if="${sessionUser != null and isInscrit}">
                 <p class="alert alert-success">
                   Vous êtes inscrit à cette course !
                 </p>
                 <div style="display: flex; gap: 0.5rem; margin-top: 1rem">
                   <a
-                    th:href="@{'/participations/bib/' + ${participation.idParticipation}}"
+                    th:href="|${contextPath}/participations/bib/${participation.idParticipation}|"
                     class="btn"
                     style="flex: 1"
                     >Télécharger dossard</a
                   >
                   <form
-                    th:action="@{'/participations/cancel/' + ${course.idCourse}}"
+                    th:action="|${contextPath}/participations/cancel/${course.idCourse}|"
                     method="post"
                     style="flex: 1"
                   >
@@ -130,11 +130,11 @@
                 </div>
               </div>
 
-              <div th:if="${session.user == null}">
+              <div th:if="${sessionUser == null}">
                 <p class="alert alert-info">
                   Vous devez être connecté pour vous inscrire à cette course.
                 </p>
-                <a th:href="@{/login}" class="btn btn-block">Se connecter</a>
+                <a th:href="|${contextPath}/login|" class="btn btn-block">Se connecter</a>
               </div>
 
               <div th:if="${estComplete and !isInscrit}">
@@ -145,13 +145,13 @@
               <div th:if="${isOrganisateur}" style="margin-top: 1rem">
                 <div style="display: flex; gap: 0.5rem">
                   <a
-                    th:href="@{'/organisateur/courses/edit/' + ${course.idCourse}}"
+                    th:href="|${contextPath}/organisateur/courses/edit/${course.idCourse}|"
                     class="btn"
                     style="flex: 1"
                     >Modifier</a
                   >
                   <a
-                    th:href="@{'/organisateur/courses/' + ${course.idCourse} + '/participants'}"
+                    th:href="|${contextPath}/organisateur/courses/${course.idCourse}/participants|"
                     class="btn"
                     style="flex: 1"
                     >Participants</a
@@ -211,7 +211,7 @@
             <div
               th:each="message : ${messages}"
               class="message"
-              th:style="${message.idUtilisateur == session.user?.idUtilisateur ? 'background-color: #f0f7ff; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;' : 'background-color: #f8f9fa; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;'}"
+              th:style="${sessionUser != null and message.idUtilisateur == sessionUser.idUtilisateur ? 'background-color: #f0f7ff; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;' : 'background-color: #f8f9fa; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;'}"
             >
               <div
                 style="
@@ -233,9 +233,9 @@
           </div>
 
           <!-- Formulaire d'envoi de message -->
-          <div th:if="${session.user != null}" style="margin-top: 1.5rem">
+          <div th:if="${sessionUser != null}" style="margin-top: 1.5rem">
             <form
-              th:action="@{'/courses/' + ${course.idCourse} + '/messages'}"
+              th:action="|${contextPath}/courses/${course.idCourse}/messages|"
               method="post"
             >
               <div class="form-group">
@@ -246,11 +246,11 @@
             </form>
           </div>
 
-          <div th:if="${session.user == null}" style="margin-top: 1.5rem">
+          <div th:if="${sessionUser == null}" style="margin-top: 1.5rem">
             <p class="alert alert-info">
               Vous devez être connecté pour participer à la discussion.
             </p>
-            <a th:href="@{/login}" class="btn">Se connecter</a>
+            <a th:href="|${contextPath}/login|" class="btn">Se connecter</a>
           </div>
         </div>
       </div>

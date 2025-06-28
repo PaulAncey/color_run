@@ -13,16 +13,16 @@ import fr.esgi.color_run.service.MessageService;
 import fr.esgi.color_run.service.ServiceException;
 import fr.esgi.color_run.util.SessionUtil;
 import fr.esgi.color_run.util.ThymeleafUtil;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Servlet pour gérer les messages des fils de discussion des courses
  */
-@WebServlet(name = "messageServlet", urlPatterns = {"/courses/*/messages"})
+@WebServlet(name = "messageServlet", urlPatterns = { "/courses/*/messages" })
 public class MessageServlet extends HttpServlet {
 
     private MessageService messageService;
@@ -39,22 +39,22 @@ public class MessageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         // Extraire l'ID de la course
         String pathInfo = request.getRequestURI();
         String[] pathParts = pathInfo.split("/");
         int courseId = Integer.parseInt(pathParts[pathParts.length - 2]);
-        
+
         try {
             // Vérifier si la course existe
             if (!courseService.trouverParId(courseId).isPresent()) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Course non trouvée");
                 return;
             }
-            
+
             // Récupérer les messages de la course
             List<Message> messages = messageService.trouverParCourse(courseId);
-            
+
             // Si c'est une requête AJAX, renvoyer uniquement les messages
             String requestedWith = request.getHeader("X-Requested-With");
             if (requestedWith != null && requestedWith.equals("XMLHttpRequest")) {
@@ -67,7 +67,7 @@ public class MessageServlet extends HttpServlet {
                 variables.put("courseId", courseId);
                 ThymeleafUtil.processTemplate("messages/course-discussion", variables, request, response);
             }
-            
+
         } catch (ServiceException e) {
             // Gérer l'erreur
             if (request.getHeader("X-Requested-With") != null) {
@@ -84,33 +84,33 @@ public class MessageServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         // Vérifier si l'utilisateur est connecté
         if (!SessionUtil.isUserLoggedIn(request)) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
-        
+
         // Extraire l'ID de la course
         String pathInfo = request.getRequestURI();
         String[] pathParts = pathInfo.split("/");
         int courseId = Integer.parseInt(pathParts[pathParts.length - 2]);
-        
+
         // Récupérer les données du formulaire
         String contenu = request.getParameter("contenu");
         Integer userId = SessionUtil.getUserIdFromSession(request);
-        
+
         try {
             // Validation des données
             if (contenu == null || contenu.trim().isEmpty()) {
                 throw new ServiceException("Le contenu du message ne peut pas être vide");
             }
-            
+
             // Vérifier si la course existe
             if (!courseService.trouverParId(courseId).isPresent()) {
                 throw new ServiceException("Course non trouvée");
             }
-            
+
             // Créer le message
             Message message = Message.builder()
                     .idCourse(courseId)
@@ -118,9 +118,9 @@ public class MessageServlet extends HttpServlet {
                     .contenu(contenu)
                     .dateEnvoi(new Timestamp(System.currentTimeMillis()))
                     .build();
-            
+
             messageService.creerMessage(message);
-            
+
             // Si c'est une requête AJAX, renvoyer une réponse JSON
             String requestedWith = request.getHeader("X-Requested-With");
             if (requestedWith != null && requestedWith.equals("XMLHttpRequest")) {
@@ -130,7 +130,7 @@ public class MessageServlet extends HttpServlet {
                 // Sinon, rediriger vers la page de discussion
                 response.sendRedirect(request.getContextPath() + "/courses/" + courseId + "/messages");
             }
-            
+
         } catch (ServiceException e) {
             // Gérer l'erreur
             if (request.getHeader("X-Requested-With") != null) {

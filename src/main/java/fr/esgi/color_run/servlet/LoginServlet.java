@@ -7,11 +7,11 @@ import fr.esgi.color_run.service.ServiceException;
 import fr.esgi.color_run.service.UtilisateurService;
 import fr.esgi.color_run.util.SessionUtil;
 import fr.esgi.color_run.util.ThymeleafUtil;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -22,7 +22,7 @@ import java.util.Optional;
 /**
  * Servlet pour gérer la connexion des utilisateurs
  */
-@WebServlet(name = "loginServlet", urlPatterns = {"/login"})
+@WebServlet(name = "loginServlet", urlPatterns = { "/login" })
 public class LoginServlet extends HttpServlet {
 
     private UtilisateurService utilisateurService;
@@ -41,7 +41,7 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/dashboard");
             return;
         }
-        
+
         // Afficher le formulaire de connexion
         Map<String, Object> variables = new HashMap<>();
         ThymeleafUtil.processTemplate("login", variables, request, response);
@@ -50,10 +50,10 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        
+
         // Validation des données
         if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()) {
             Map<String, Object> variables = new HashMap<>();
@@ -61,24 +61,24 @@ public class LoginServlet extends HttpServlet {
             ThymeleafUtil.processTemplate("login", variables, request, response);
             return;
         }
-        
+
         try {
             // Vérifier les identifiants
             boolean authenticated = utilisateurService.authentifier(email, password);
-            
+
             if (authenticated) {
                 // Récupérer les informations de l'utilisateur
                 Optional<Utilisateur> optUser = utilisateurService.trouverParEmail(email);
-                
+
                 if (optUser.isPresent()) {
                     Utilisateur user = optUser.get();
-                    
+
                     // Récupérer les rôles de l'utilisateur
                     List<Role> userRoles = utilisateurService.obtenirRolesUtilisateur(user.getIdUtilisateur());
-                    
+
                     // Créer la session utilisateur avec les rôles
                     SessionUtil.createUserSession(request, user, userRoles);
-                    
+
                     // Rediriger vers le tableau de bord
                     response.sendRedirect(request.getContextPath() + "/dashboard");
                 } else {
@@ -90,7 +90,7 @@ public class LoginServlet extends HttpServlet {
                 variables.put("error", "Email ou mot de passe incorrect");
                 ThymeleafUtil.processTemplate("login", variables, request, response);
             }
-            
+
         } catch (ServiceException e) {
             // Gérer l'erreur
             Map<String, Object> variables = new HashMap<>();

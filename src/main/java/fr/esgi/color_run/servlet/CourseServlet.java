@@ -11,11 +11,11 @@ import fr.esgi.color_run.service.ParticipationService;
 import fr.esgi.color_run.service.ServiceException;
 import fr.esgi.color_run.util.SessionUtil;
 import fr.esgi.color_run.util.ThymeleafUtil;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ import java.util.Optional;
 /**
  * Servlet pour gérer les courses (listing, détails, recherche)
  */
-@WebServlet(name = "courseServlet", urlPatterns = {"/courses", "/courses/*"})
+@WebServlet(name = "courseServlet", urlPatterns = { "/courses", "/courses/*" })
 public class CourseServlet extends HttpServlet {
 
     private CourseService courseService;
@@ -45,9 +45,9 @@ public class CourseServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String pathInfo = request.getPathInfo();
-        
+
         try {
             if (pathInfo == null || pathInfo.equals("/")) {
                 // Liste des courses avec filtres éventuels
@@ -72,9 +72,9 @@ public class CourseServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String pathInfo = request.getPathInfo();
-        
+
         try {
             if (pathInfo != null && pathInfo.matches("/\\d+/messages")) {
                 // Envoi d'un nouveau message
@@ -95,14 +95,14 @@ public class CourseServlet extends HttpServlet {
      */
     private void listCourses(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ServiceException {
-        
+
         // Récupérer les paramètres de filtre
         String ville = request.getParameter("ville");
         Float minDistance = parseFloatParam(request.getParameter("minDistance"));
         Float maxDistance = parseFloatParam(request.getParameter("maxDistance"));
         Float maxPrix = parseFloatParam(request.getParameter("maxPrix"));
         Boolean avecObstacles = parseBooleanParam(request.getParameter("avecObstacles"));
-        
+
         // Récupérer les courses selon les filtres
         List<Course> courses;
         if (ville != null || minDistance != null || maxDistance != null || maxPrix != null || avecObstacles != null) {
@@ -110,11 +110,11 @@ public class CourseServlet extends HttpServlet {
         } else {
             courses = courseService.trouverCoursesAVenir();
         }
-        
+
         // Préparer les données pour la vue
         Map<String, Object> variables = new HashMap<>();
         variables.put("courses", courses);
-        
+
         // Traiter le template
         ThymeleafUtil.processTemplate("courses/list", variables, request, response);
     }
@@ -124,42 +124,43 @@ public class CourseServlet extends HttpServlet {
      */
     private void showCourseDetails(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ServiceException {
-        
+
         // Extraire l'ID de la course
         String pathInfo = request.getPathInfo();
         int courseId = Integer.parseInt(pathInfo.substring(1));
-        
+
         // Récupérer les détails de la course
         Optional<Course> optCourse = courseService.trouverParId(courseId);
-        
+
         if (optCourse.isPresent()) {
             Course course = optCourse.get();
-            
+
             // Récupérer le nombre d'inscrits
             int nbInscrits = participationService.compterParticipants(courseId);
             boolean estComplete = participationService.courseEstComplete(courseId);
-            
+
             // Récupérer les messages avec informations utilisateur
             List<MessageWithUser> messages = messageService.trouverParCourseAvecUtilisateur(courseId);
-            
+
             // Vérifier si l'utilisateur est connecté
             boolean isOrganisateur = false;
             boolean isInscrit = false;
             Participation participation = null;
-            
+
             Integer userId = SessionUtil.getUserIdFromSession(request);
             if (userId != null) {
                 // Vérifier si l'utilisateur est l'organisateur
                 isOrganisateur = courseService.estOrganisateur(userId, courseId);
-                
+
                 // Vérifier si l'utilisateur est inscrit
-                Optional<Participation> optParticipation = participationService.trouverParUtilisateurEtCourse(userId, courseId);
+                Optional<Participation> optParticipation = participationService.trouverParUtilisateurEtCourse(userId,
+                        courseId);
                 isInscrit = optParticipation.isPresent();
                 if (isInscrit) {
                     participation = optParticipation.get();
                 }
             }
-            
+
             // Préparer les données pour la vue
             Map<String, Object> variables = new HashMap<>();
             variables.put("course", course);
@@ -169,7 +170,7 @@ public class CourseServlet extends HttpServlet {
             variables.put("isOrganisateur", isOrganisateur);
             variables.put("isInscrit", isInscrit);
             variables.put("participation", participation);
-            
+
             // Traiter le template
             ThymeleafUtil.processTemplate("courses/details", variables, request, response);
         } else {
@@ -185,33 +186,34 @@ public class CourseServlet extends HttpServlet {
      */
     private void sendMessage(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ServiceException {
-        
+
         // Vérifier si l'utilisateur est connecté
         if (!SessionUtil.isUserLoggedIn(request)) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
-        
+
         // Extraire l'ID de la course
         String pathInfo = request.getPathInfo();
         int courseId = Integer.parseInt(pathInfo.substring(1, pathInfo.indexOf("/messages")));
-        
+
         // Récupérer les données du formulaire
         String contenu = request.getParameter("contenu");
         Integer userId = SessionUtil.getUserIdFromSession(request);
-        
+
         // Validation des données
         if (contenu == null || contenu.trim().isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/courses/" + courseId + "?error=Le contenu du message ne peut pas être vide");
+            response.sendRedirect(request.getContextPath() + "/courses/" + courseId
+                    + "?error=Le contenu du message ne peut pas être vide");
             return;
         }
-        
+
         // Vérifier si la course existe
         if (!courseService.trouverParId(courseId).isPresent()) {
             response.sendRedirect(request.getContextPath() + "/courses/" + courseId + "?error=Course non trouvée");
             return;
         }
-        
+
         // Créer le message
         Message message = Message.builder()
                 .idCourse(courseId)
@@ -219,11 +221,12 @@ public class CourseServlet extends HttpServlet {
                 .contenu(contenu)
                 .dateEnvoi(new java.sql.Timestamp(System.currentTimeMillis()))
                 .build();
-        
+
         messageService.creerMessage(message);
-        
+
         // Rediriger vers la page de la course avec succès
-        response.sendRedirect(request.getContextPath() + "/courses/" + courseId + "?success=Message envoyé avec succès");
+        response.sendRedirect(
+                request.getContextPath() + "/courses/" + courseId + "?success=Message envoyé avec succès");
     }
 
     /**

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mon profil - Color Run</title>
-    <link rel="stylesheet" th:href="@{/resources/css/main.css}" />
+    <link rel="stylesheet" th:href="|${contextPath}/resources/css/main.css|" />
   </head>
   <body>
     <!-- Header -->
@@ -26,14 +26,14 @@
       <div class="form-container">
         <h2>Mes informations</h2>
 
-        <form th:action="@{/profile}" method="post">
+        <form th:action="|${contextPath}/profile|" method="post">
           <div class="form-group">
             <label for="nom">Nom</label>
             <input
               type="text"
               id="nom"
               name="nom"
-              th:value="${session.user.nom}"
+              th:value="${sessionUser.nom}"
               required
             />
           </div>
@@ -44,7 +44,7 @@
               type="text"
               id="prenom"
               name="prenom"
-              th:value="${session.user.prenom}"
+              th:value="${sessionUser.prenom}"
               required
             />
           </div>
@@ -55,7 +55,7 @@
               type="email"
               id="email"
               name="email"
-              th:value="${session.user.email}"
+              th:value="${sessionUser.email}"
               required
             />
           </div>
@@ -99,7 +99,7 @@
           >
             <a
               th:if="${canRequestOrganizerRole}"
-              th:href="@{/user/request-organizer}"
+              th:href="|${contextPath}/user/request-organizer|"
               class="btn"
               >Devenir organisateur</a
             >

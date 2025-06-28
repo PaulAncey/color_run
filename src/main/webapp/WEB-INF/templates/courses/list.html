@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Courses - Color Run</title>
-    <link rel="stylesheet" th:href="@{/resources/css/main.css}" />
+    <link rel="stylesheet" th:href="|${contextPath}/resources/css/main.css|" />
   </head>
   <body>
     <!-- Header -->
@@ -18,7 +18,7 @@
       <div class="card" style="margin-bottom: 2rem">
         <div class="card-body">
           <h3>Filtrer les courses</h3>
-          <form th:action="@{/courses}" method="get">
+          <form th:action="|${contextPath}/courses|" method="get">
             <div style="display: flex; flex-wrap: wrap; gap: 1rem">
               <div class="form-group" style="flex: 1; min-width: 200px">
                 <label for="ville">Ville</label>
@@ -82,7 +82,7 @@
               </div>
             </div>
             <button type="submit" class="btn">Filtrer</button>
-            <a th:href="@{/courses}" class="btn btn-secondary">Réinitialiser</a>
+            <a th:href="|${contextPath}/courses|" class="btn btn-secondary">Réinitialiser</a>
           </form>
         </div>
       </div>
@@ -117,7 +117,7 @@
               </div>
             </div>
             <div class="course-actions">
-              <a th:href="@{'/courses/' + ${course.idCourse}}" class="btn"
+              <a th:href="${contextPath + '/courses/' + course.idCourse}" class="btn"
                 >Détails</a
               >
             </div>
@@ -127,20 +127,20 @@
 
       <!-- Bouton pour créer une course (si organisateur) -->
       <div
-        th:if="${session.user != null and #lists.contains(session.userRoles, 'ORGANISATEUR')}"
+        th:if="${sessionUser != null and #lists.contains(sessionUserRoles, 'ORGANISATEUR')}"
         style="margin-top: 2rem; text-align: center"
       >
-        <a th:href="@{/organisateur/courses/create}" class="btn"
+        <a th:href="|${contextPath}/organisateur/courses/create|" class="btn"
           >Créer une nouvelle course</a
         >
       </div>
 
       <!-- Bouton pour demander à devenir organisateur -->
       <div
-        th:if="${session.user != null and not #lists.contains(session.userRoles, 'ORGANISATEUR')}"
+        th:if="${sessionUser != null and not #lists.contains(sessionUserRoles, 'ORGANISATEUR')}"
         style="margin-top: 2rem; text-align: center"
       >
-        <a th:href="@{/user/request-organizer}" class="btn btn-secondary"
+        <a th:href="|${contextPath}/user/request-organizer|" class="btn btn-secondary"
           >Devenir organisateur</a
         >
       </div>
