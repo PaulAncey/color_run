@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Accueil - Color Run</title>
-    <link rel="stylesheet" th:href="@{/resources/css/main.css}" />
+    <link rel="stylesheet" th:href="|${contextPath}/resources/css/main.css|" />
   </head>
   <body>
     <!-- Header -->
@@ -16,10 +16,10 @@
         <h1>Bienvenue sur Color Run</h1>
         <p>Découvrez les courses colorées les plus fun de France !</p>
         <div class="hero-buttons">
-          <a th:href="@{/courses}" class="btn">Voir les courses</a>
+          <a th:href="|${contextPath}/courses|" class="btn">Voir les courses</a>
           <a
-            th:if="${session.user == null}"
-            th:href="@{/register}"
+            th:if="${sessionUser == null}"
+            th:href="|${contextPath}/register|"
             class="btn btn-secondary"
             >S'inscrire</a
           >
@@ -58,7 +58,7 @@
                 </div>
               </div>
               <div class="course-actions">
-                <a th:href="@{'/courses/' + ${course.idCourse}}" class="btn"
+                <a th:href="${contextPath + '/courses/' + course.idCourse}" class="btn"
                   >Détails</a
                 >
               </div>
@@ -67,7 +67,7 @@
         </div>
 
         <div style="text-align: center; margin-top: 1.5rem">
-          <a th:href="@{/courses}" class="btn">Voir toutes les courses</a>
+          <a th:href="|${contextPath}/courses|" class="btn">Voir toutes les courses</a>
         </div>
       </div>
     </section>
@@ -117,7 +117,7 @@
           à voir la vie en couleurs !
         </p>
         <a
-          th:href="@{/courses}"
+          th:href="|${contextPath}/courses|"
           class="btn"
           style="background-color: white; color: #ff5a5f; margin-top: 1rem"
           >Trouver une course</a

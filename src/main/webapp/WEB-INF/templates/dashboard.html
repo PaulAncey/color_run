@@ -26,7 +26,7 @@
         <div class="card-header">
           <h2>
             Bienvenue,
-            <span th:text="${session.user.prenom + ' ' + session.user.nom}"
+            <span th:text="${sessionUser.prenom + ' ' + sessionUser.nom}"
               >Utilisateur</span
             >
             !
@@ -39,12 +39,12 @@
               <h3>Mes informations</h3>
               <p>
                 <strong>Email :</strong>
-                <span th:text="${session.user.email}">Email</span>
+                <span th:text="${sessionUser.email}">Email</span>
               </p>
               <p>
                 <strong>Membre depuis :</strong>
                 <span
-                  th:text="${#dates.format(session.user.dateCreation, 'dd/MM/yyyy')}"
+                  th:text="${#dates.format(sessionUser.dateCreation, 'dd/MM/yyyy')}"
                   >Date</span
                 >
               </p>
@@ -56,7 +56,7 @@
               </p>
 
               <div style="margin-top: 1rem">
-                <a th:href="@{/profile}" class="btn">Modifier mon profil</a>
+                <a th:href="|${contextPath}/profile|" class="btn">Modifier mon profil</a>
               </div>
             </div>
 
@@ -82,12 +82,12 @@
                 <h3>Liens rapides</h3>
                 <div style="margin-top: 0.5rem">
                   <a
-                    th:href="@{/participations}"
+                    th:href="|${contextPath}/participations|"
                     class="btn"
                     style="margin-right: 0.5rem"
                     >Mes participations</a
                   >
-                  <a th:href="@{/courses}" class="btn">Voir les courses</a>
+                  <a th:href="|${contextPath}/courses|" class="btn">Voir les courses</a>
                 </div>
 
                 <!-- Liens pour organisateur -->
@@ -96,12 +96,12 @@
                   style="margin-top: 1rem"
                 >
                   <a
-                    th:href="@{/organisateur/courses}"
+                    th:href="|${contextPath}/organisateur/courses|"
                     class="btn"
                     style="margin-right: 0.5rem"
                     >Mes courses</a
                   >
-                  <a th:href="@{/organisateur/courses/create}" class="btn"
+                  <a th:href="|${contextPath}/organisateur/courses/create|" class="btn"
                     >Créer une course</a
                   >
                 </div>
@@ -111,7 +111,7 @@
                   th:if="${#lists.contains(userRoles, 'ADMIN')}"
                   style="margin-top: 1rem"
                 >
-                  <a th:href="@{/admin/organizer-requests}" class="btn"
+                  <a th:href="|${contextPath}/admin/organizer-requests|" class="btn"
                     >Demandes d'organisateur</a
                   >
                 </div>
@@ -121,7 +121,7 @@
                   th:if="${!#lists.contains(userRoles, 'ORGANISATEUR') && canRequestOrganizerRole}"
                   style="margin-top: 1rem"
                 >
-                  <a th:href="@{/user/request-organizer}" class="btn"
+                  <a th:href="|${contextPath}/user/request-organizer|" class="btn"
                     >Devenir organisateur</a
                   >
                 </div>
@@ -153,7 +153,7 @@
             th:if="${#lists.isEmpty(participations)}"
           >
             Vous n'êtes inscrit à aucune course pour le moment.
-            <a th:href="@{/courses}" class="btn" style="margin-left: 1rem"
+            <a th:href="|${contextPath}/courses|" class="btn" style="margin-left: 1rem"
               >Voir les courses disponibles</a
             >
           </div>

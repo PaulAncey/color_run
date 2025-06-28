@@ -7,7 +7,7 @@
   <div
     th:each="message : ${messages}"
     class="message"
-    th:style="${message.idUtilisateur == session.user?.idUtilisateur ? 'background-color: #f0f7ff; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;' : 'background-color: #f8f9fa; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;'}"
+    th:style="${message.idUtilisateur == sessionUser?.idUtilisateur ? 'background-color: #f0f7ff; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;' : 'background-color: #f8f9fa; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;'}"
   >
     <div
       style="

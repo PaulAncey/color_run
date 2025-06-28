@@ -6,7 +6,7 @@
     <title th:text="${course.nom + ' - Discussion - Color Run'}">
       Discussion - Color Run
     </title>
-    <link rel="stylesheet" th:href="@{/resources/css/main.css}" />
+    <link rel="stylesheet" th:href="|${contextPath}/resources/css/main.css|" />
   </head>
   <body>
     <!-- Header -->
@@ -26,7 +26,7 @@
             <h1 th:text="${'Discussion - ' + course.nom}">
               Discussion de la course
             </h1>
-            <a th:href="@{'/courses/' + ${courseId}}" class="btn btn-secondary"
+            <a th:href="|${contextPath}/courses/${courseId}|" class="btn btn-secondary"
               >Retour à la course</a
             >
           </div>
@@ -45,9 +45,9 @@
           </div>
 
           <!-- Formulaire d'envoi de message -->
-          <div th:if="${session.user != null}" style="margin-top: 1.5rem">
+          <div th:if="${sessionUser != null}" style="margin-top: 1.5rem">
             <form
-              th:action="@{'/courses/' + ${courseId} + '/messages'}"
+              th:action="|${contextPath}/courses/${courseId}/messages|"
               method="post"
               id="message-form"
             >
@@ -59,11 +59,11 @@
             </form>
           </div>
 
-          <div th:if="${session.user == null}" style="margin-top: 1.5rem">
+          <div th:if="${sessionUser == null}" style="margin-top: 1.5rem">
             <p class="alert alert-info">
               Vous devez être connecté pour participer à la discussion.
             </p>
-            <a th:href="@{/login}" class="btn">Se connecter</a>
+            <a th:href="|${contextPath}/login|" class="btn">Se connecter</a>
           </div>
         </div>
       </div>

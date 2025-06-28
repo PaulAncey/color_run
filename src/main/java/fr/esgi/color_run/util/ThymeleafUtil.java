@@ -9,6 +9,7 @@ import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Map;
 
@@ -62,9 +63,20 @@ public class ThymeleafUtil {
             context.setVariables(variables);
         }
 
-        // Ajouter des variables utiles
+        // Ajouter des variables utiles pour les templates
         context.setVariable("request", request);
-        context.setVariable("session", request.getSession());
+        context.setVariable("contextPath", request.getContextPath());
+
+        // Extraire les attributs de session et les passer comme variables
+        HttpSession session = request.getSession();
+        context.setVariable("session", session);
+
+        // Ajouter les attributs de session comme variables directes
+        Object user = session.getAttribute("user");
+        Object userRoles = session.getAttribute("userRoles");
+
+        context.setVariable("sessionUser", user);
+        context.setVariable("sessionUserRoles", userRoles);
 
         // Configurer la réponse
         response.setContentType("text/html;charset=UTF-8");

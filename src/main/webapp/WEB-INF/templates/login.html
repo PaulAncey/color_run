@@ -50,7 +50,7 @@
       <p class="text-red-600 text-sm" th:text="${error}"></p>
     </div>
 
-    <form method="post" action="/login" class="space-y-6">
+    <form method="post" th:action="|${contextPath}/login|" class="space-y-6">
       <!-- Champ email -->
       <div>
         <input
@@ -78,7 +78,7 @@
       <!-- Lien mot de passe oublié -->
       <div class="text-left">
         <a href="/forgot-password" class="text-sm text-gray-500 hover:text-color-primary transition-colors duration-300">
-          mdp oublié
+          Mot de passe oublié ?
         </a>
       </div>
 

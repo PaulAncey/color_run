@@ -8,45 +8,45 @@
     <header th:fragment="header">
       <div class="container navbar">
         <div class="logo">
-          <a th:href="@{/}">Color Run</a>
+          <a th:href="|${contextPath}/|">Color Run</a>
         </div>
         <ul class="nav-links">
-          <li><a th:href="@{/}">Accueil</a></li>
-          <li><a th:href="@{/courses}">Courses</a></li>
+          <li><a th:href="|${contextPath}/|">Accueil</a></li>
+          <li><a th:href="|${contextPath}/courses|">Courses</a></li>
 
           <!-- Liens pour utilisateur non connecté -->
-          <li th:if="${session.user == null}">
-            <a th:href="@{/login}">Connexion</a>
+          <li th:if="${sessionUser == null}">
+            <a th:href="|${contextPath}/login|">Connexion</a>
           </li>
-          <li th:if="${session.user == null}">
-            <a th:href="@{/register}">Inscription</a>
+          <li th:if="${sessionUser == null}">
+            <a th:href="|${contextPath}/register|">Inscription</a>
           </li>
 
           <!-- Liens pour utilisateur connecté -->
-          <li th:if="${session.user != null}">
-            <a th:href="@{/participations}">Mes Participations</a>
+          <li th:if="${sessionUser != null}">
+            <a th:href="|${contextPath}/participations|">Mes Participations</a>
           </li>
 
           <!-- Liens pour organisateur -->
           <li
-            th:if="${session.user != null and #lists.contains(session.userRoles, 'ORGANISATEUR')}"
+            th:if="${sessionUser != null and #lists.contains(sessionUserRoles, 'ORGANISATEUR')}"
           >
-            <a th:href="@{/organisateur/courses}">Mes Courses</a>
+            <a th:href="|${contextPath}/organisateur/courses|">Mes Courses</a>
           </li>
 
           <!-- Liens pour admin -->
           <li
-            th:if="${session.user != null and #lists.contains(session.userRoles, 'ADMIN')}"
+            th:if="${sessionUser != null and #lists.contains(sessionUserRoles, 'ADMIN')}"
           >
-            <a th:href="@{/admin/organizer-requests}">Demandes</a>
+            <a th:href="|${contextPath}/admin/organizer-requests|">Demandes</a>
           </li>
 
           <!-- Profil et déconnexion -->
-          <li th:if="${session.user != null}" class="dropdown">
-            <a href="#" th:text="${session.user.prenom}">User</a>
+          <li th:if="${sessionUser != null}" class="dropdown">
+            <a href="#" th:text="${sessionUser.prenom}">User</a>
             <div class="dropdown-content">
-              <a th:href="@{/profile}">Profil</a>
-              <a th:href="@{/logout}">Déconnexion</a>
+              <a th:href="|${contextPath}/profile|">Profil</a>
+              <a th:href="|${contextPath}/logout|">Déconnexion</a>
             </div>
           </li>
         </ul>
