@@ -5,11 +5,11 @@ import fr.esgi.color_run.config.ServiceFactory;
 import fr.esgi.color_run.service.CourseService;
 import fr.esgi.color_run.service.ServiceException;
 import fr.esgi.color_run.util.ThymeleafUtil;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * Servlet pour gérer l'affichage de la page d'accueil
  */
-@WebServlet(name = "homeServlet", urlPatterns = {"", "/"})
+@WebServlet(name = "homeServlet", urlPatterns = { "", "/" })
 public class HomeServlet extends HttpServlet {
 
     private CourseService courseService;
@@ -33,23 +33,23 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         try {
             // Récupérer les prochaines courses
             List<Course> upcomingCourses = courseService.trouverCoursesAVenir();
-            
+
             // Limiter à 3 courses pour la page d'accueil
             if (upcomingCourses.size() > 3) {
                 upcomingCourses = upcomingCourses.subList(0, 3);
             }
-            
+
             // Préparer les données pour la vue
             Map<String, Object> variables = new HashMap<>();
             variables.put("upcomingCourses", upcomingCourses);
-            
+
             // Traiter le template
             ThymeleafUtil.processTemplate("home", variables, request, response);
-            
+
         } catch (ServiceException e) {
             // Gérer l'erreur
             Map<String, Object> variables = new HashMap<>();

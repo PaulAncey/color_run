@@ -2,8 +2,8 @@ package fr.esgi.color_run.util;
 
 import fr.esgi.color_run.business.Role;
 import fr.esgi.color_run.business.Utilisateur;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 
