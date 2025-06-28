@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${course.nom + ' - Color Run'}">
+      Détails de la course - Color Run
+    </title>
+    <link rel="stylesheet" th:href="@{/resources/css/main.css}" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <!-- Main content -->
+    <div class="container">
+      <!-- Alertes -->
+      <div
+        class="alert alert-success"
+        th:if="${param.success != null and !param.success[0].isEmpty()}"
+        th:text="${param.success[0]}"
+      ></div>
+      <div
+        class="alert alert-danger"
+        th:if="${param.error != null and !param.error[0].isEmpty()}"
+        th:text="${param.error[0]}"
+      ></div>
+
+      <!-- Détails de la course -->
+      <div class="card">
+        <div class="card-header">
+          <h1 th:text="${course.nom}">Nom de la course</h1>
+          <div
+            th:text="${#dates.format(course.dateCourse, 'dd MMMM yyyy') + ' à ' + #dates.format(course.heureDebut, 'HH:mm')}"
+          >
+            Date et heure
+          </div>
+        </div>
+        <div class="card-body">
+          <div style="display: flex; flex-wrap: wrap; gap: 2rem">
+            <!-- Informations principales -->
+            <div style="flex: 2; min-width: 300px">
+              <h3>Description</h3>
+              <p th:text="${course.description}">Description de la course</p>
+
+              <h3 style="margin-top: 1.5rem">Informations</h3>
+              <table>
+                <tr>
+                  <th>Ville</th>
+                  <td th:text="${course.ville}">Ville</td>
+                </tr>
+                <tr>
+                  <th>Adresse</th>
+                  <td th:text="${course.adresse}">Adresse</td>
+                </tr>
+                <tr>
+                  <th>Distance</th>
+                  <td th:text="${course.distanceKm + ' km'}">Distance</td>
+                </tr>
+                <tr>
+                  <th>Prix</th>
+                  <td th:text="${course.prix + ' €'}">Prix</td>
+                </tr>
+                <tr>
+                  <th>Avec obstacles</th>
+                  <td th:text="${course.avecObstacles ? 'Oui' : 'Non'}">
+                    Avec obstacles
+                  </td>
+                </tr>
+                <tr
+                  th:if="${course.causeSoutenue != null and !course.causeSoutenue.isEmpty()}"
+                >
+                  <th>Cause soutenue</th>
+                  <td th:text="${course.causeSoutenue}">Cause soutenue</td>
+                </tr>
+                <tr>
+                  <th>Places disponibles</th>
+                  <td th:text="${nbInscrits + '/' + course.nbMaxParticipants}">
+                    Places
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <!-- Carte et actions -->
+            <div style="flex: 1; min-width: 300px">
+              <!-- Carte (placeholder) -->
+              <div style="margin-bottom: 1.5rem">
+                <img
+                  src="https://via.placeholder.com/400x300?text=Carte"
+                  alt="Carte"
+                  style="width: 100%; border-radius: 5px"
+                />
+              </div>
+
+              <!-- Actions -->
+              <div
+                th:if="${session.user != null and !isOrganisateur and !isInscrit and !estComplete}"
+              >
+                <form
+                  th:action="@{'/participations/register/' + ${course.idCourse}}"
+                  method="post"
+                >
+                  <button type="submit" class="btn btn-block">
+                    S'inscrire
+                  </button>
+                </form>
+              </div>
+
+              <div th:if="${session.user != null and isInscrit}">
+                <p class="alert alert-success">
+                  Vous êtes inscrit à cette course !
+                </p>
+                <div style="display: flex; gap: 0.5rem; margin-top: 1rem">
+                  <a
+                    th:href="@{'/participations/bib/' + ${participation.idParticipation}}"
+                    class="btn"
+                    style="flex: 1"
+                    >Télécharger dossard</a
+                  >
+                  <form
+                    th:action="@{'/participations/cancel/' + ${course.idCourse}}"
+                    method="post"
+                    style="flex: 1"
+                  >
+                    <button type="submit" class="btn btn-secondary btn-block">
+                      Annuler inscription
+                    </button>
+                  </form>
+                </div>
+              </div>
+
+              <div th:if="${session.user == null}">
+                <p class="alert alert-info">
+                  Vous devez être connecté pour vous inscrire à cette course.
+                </p>
+                <a th:href="@{/login}" class="btn btn-block">Se connecter</a>
+              </div>
+
+              <div th:if="${estComplete and !isInscrit}">
+                <p class="alert alert-danger">Cette course est complète !</p>
+              </div>
+
+              <!-- Actions organisateur -->
+              <div th:if="${isOrganisateur}" style="margin-top: 1rem">
+                <div style="display: flex; gap: 0.5rem">
+                  <a
+                    th:href="@{'/organisateur/courses/edit/' + ${course.idCourse}}"
+                    class="btn"
+                    style="flex: 1"
+                    >Modifier</a
+                  >
+                  <a
+                    th:href="@{'/organisateur/courses/' + ${course.idCourse} + '/participants'}"
+                    class="btn"
+                    style="flex: 1"
+                    >Participants</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section messages -->
+      <div class="card" style="margin-top: 2rem">
+        <div class="card-header">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
+            <h2>Discussion</h2>
+            <span
+              class="badge"
+              th:text="${#lists.size(messages)} + ' message(s)'"
+              style="
+                background-color: #ff5a5f;
+                color: white;
+                padding: 0.5rem;
+                border-radius: 15px;
+              "
+            >
+              Messages
+            </span>
+          </div>
+        </div>
+        <div class="card-body">
+          <!-- Debug info -->
+          <div
+            th:if="${messages != null}"
+            style="color: #6c757d; font-size: 0.9rem; margin-bottom: 1rem"
+          >
+            <span
+              th:text="'Messages chargés: ' + ${#lists.size(messages)}"
+            ></span>
+          </div>
+
+          <!-- Liste des messages -->
+          <div id="messages-container">
+            <div
+              th:if="${messages == null or #lists.isEmpty(messages)}"
+              class="alert alert-info"
+            >
+              Aucun message pour le moment. Soyez le premier à écrire !
+            </div>
+
+            <div
+              th:each="message : ${messages}"
+              class="message"
+              th:style="${message.idUtilisateur == session.user?.idUtilisateur ? 'background-color: #f0f7ff; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;' : 'background-color: #f8f9fa; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;'}"
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  margin-bottom: 0.5rem;
+                "
+              >
+                <strong th:text="${message.utilisateurNomComplet}"
+                  >Nom utilisateur</strong
+                >
+                <span
+                  th:text="${#dates.format(message.dateEnvoi, 'dd/MM/yyyy HH:mm')}"
+                  >Date</span
+                >
+              </div>
+              <p th:text="${message.contenu}">Contenu du message</p>
+            </div>
+          </div>
+
+          <!-- Formulaire d'envoi de message -->
+          <div th:if="${session.user != null}" style="margin-top: 1.5rem">
+            <form
+              th:action="@{'/courses/' + ${course.idCourse} + '/messages'}"
+              method="post"
+            >
+              <div class="form-group">
+                <label for="contenu">Écrire un message</label>
+                <textarea id="contenu" name="contenu" required></textarea>
+              </div>
+              <button type="submit" class="btn">Envoyer</button>
+            </form>
+          </div>
+
+          <div th:if="${session.user == null}" style="margin-top: 1.5rem">
+            <p class="alert alert-info">
+              Vous devez être connecté pour participer à la discussion.
+            </p>
+            <a th:href="@{/login}" class="btn">Se connecter</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+  </body>
+</html>

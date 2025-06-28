@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Créer une course - Color Run</title>
+    <link rel="stylesheet" th:href="@{/resources/css/main.css}" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <!-- Main content -->
+    <div class="container">
+      <h1>Créer une nouvelle course</h1>
+
+      <!-- Alertes -->
+      <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+
+      <!-- Formulaire de création -->
+      <div class="card">
+        <div class="card-body">
+          <form th:action="@{/organisateur/courses/create}" method="post">
+            <div style="display: flex; flex-wrap: wrap; gap: 1.5rem">
+              <!-- Première colonne -->
+              <div style="flex: 1; min-width: 300px">
+                <div class="form-group">
+                  <label for="nom">Nom de la course*</label>
+                  <input type="text" id="nom" name="nom" required />
+                </div>
+
+                <div class="form-group">
+                  <label for="description">Description*</label>
+                  <textarea
+                    id="description"
+                    name="description"
+                    required
+                    rows="5"
+                  ></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label for="ville">Ville*</label>
+                  <input type="text" id="ville" name="ville" required />
+                </div>
+
+                <div class="form-group">
+                  <label for="adresse">Adresse*</label>
+                  <input type="text" id="adresse" name="adresse" required />
+                </div>
+
+                <div class="form-group">
+                  <label for="causeSoutenue">Cause soutenue</label>
+                  <input type="text" id="causeSoutenue" name="causeSoutenue" />
+                </div>
+              </div>
+
+              <!-- Deuxième colonne -->
+              <div style="flex: 1; min-width: 300px">
+                <div class="form-group">
+                  <label for="dateCourse">Date de la course*</label>
+                  <input
+                    type="date"
+                    id="dateCourse"
+                    name="dateCourse"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="heureDebut">Heure de début*</label>
+                  <input
+                    type="time"
+                    id="heureDebut"
+                    name="heureDebut"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="distanceKm">Distance (km)*</label>
+                  <input
+                    type="number"
+                    id="distanceKm"
+                    name="distanceKm"
+                    step="0.1"
+                    min="0"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="prix">Prix (€)*</label>
+                  <input
+                    type="number"
+                    id="prix"
+                    name="prix"
+                    step="0.01"
+                    min="0"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="nbMaxParticipants"
+                    >Nombre maximum de participants*</label
+                  >
+                  <input
+                    type="number"
+                    id="nbMaxParticipants"
+                    name="nbMaxParticipants"
+                    min="1"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="avecObstacles">Avec obstacles</label>
+                  <select id="avecObstacles" name="avecObstacles">
+                    <option value="false">Non</option>
+                    <option value="true">Oui</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="latitude">Latitude</label>
+                  <input
+                    type="number"
+                    id="latitude"
+                    name="latitude"
+                    step="0.000001"
+                  />
+                  <small>Optionnel, pour l'affichage sur la carte</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="longitude">Longitude</label>
+                  <input
+                    type="number"
+                    id="longitude"
+                    name="longitude"
+                    step="0.000001"
+                  />
+                  <small>Optionnel, pour l'affichage sur la carte</small>
+                </div>
+              </div>
+            </div>
+
+            <div
+              style="
+                margin-top: 1.5rem;
+                display: flex;
+                gap: 1rem;
+                justify-content: center;
+              "
+            >
+              <button type="submit" class="btn">Créer la course</button>
+              <a th:href="@{/organisateur/courses}" class="btn btn-secondary"
+                >Annuler</a
+              >
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+  </body>
+</html>

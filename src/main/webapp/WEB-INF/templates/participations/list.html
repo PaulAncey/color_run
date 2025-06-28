@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mes participations - Color Run</title>
+    <link rel="stylesheet" th:href="@{/resources/css/main.css}" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <!-- Main content -->
+    <div class="container">
+      <h1>Mes participations</h1>
+
+      <!-- Alertes -->
+      <div
+        class="alert alert-success"
+        th:if="${param.success != null and !param.success[0].isEmpty()}"
+        th:text="${param.success[0]}"
+      ></div>
+      <div
+        class="alert alert-danger"
+        th:if="${param.error != null and !param.error[0].isEmpty()}"
+        th:text="${param.error[0]}"
+      ></div>
+
+      <!-- Aucune participation -->
+      <div class="alert alert-info" th:if="${#lists.isEmpty(participations)}">
+        Vous n'êtes inscrit à aucune course pour le moment.
+        <a th:href="@{/courses}" class="btn" style="margin-left: 1rem"
+          >Voir les courses disponibles</a
+        >
+      </div>
+
+      <!-- Liste des participations -->
+      <div
+        class="card"
+        th:each="participation : ${participations}"
+        style="margin-bottom: 1.5rem"
+      >
+        <div class="card-body">
+          <div style="display: flex; flex-wrap: wrap; gap: 1.5rem">
+            <!-- Informations sur la course -->
+            <div style="flex: 3; min-width: 300px">
+              <h2 th:text="${participation.course.nom}">Nom de la course</h2>
+              <div
+                style="color: #6c757d; margin-bottom: 0.5rem"
+                th:text="${#dates.format(participation.course.dateCourse, 'dd MMMM yyyy') + ' à ' + #dates.format(participation.course.heureDebut, 'HH:mm')}"
+              >
+                Date et heure
+              </div>
+              <div
+                th:text="${participation.course.ville + ' - ' + participation.course.adresse}"
+              >
+                Lieu
+              </div>
+              <div style="margin-top: 1rem">
+                <strong>Numéro de dossard :</strong>
+                <span th:text="${participation.numeroDossard}">Numéro</span>
+              </div>
+              <div style="margin-top: 0.5rem">
+                <strong>Date d'inscription :</strong>
+                <span
+                  th:text="${#dates.format(participation.dateInscription, 'dd/MM/yyyy')}"
+                  >Date</span
+                >
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div
+              style="
+                flex: 1;
+                min-width: 200px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+              "
+            >
+              <a
+                th:href="@{'/courses/' + ${participation.idCourse}}"
+                class="btn"
+                style="margin-bottom: 0.5rem"
+                >Détails & Discussion</a
+              >
+              <a
+                th:href="@{'/participations/bib/' + ${participation.idParticipation}}"
+                class="btn"
+                >Télécharger dossard</a
+              >
+              <form
+                th:action="@{'/participations/cancel/' + ${participation.idCourse}}"
+                method="post"
+                style="margin-top: 0.5rem"
+              >
+                <button type="submit" class="btn btn-secondary btn-block">
+                  Annuler inscription
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lien pour voir les courses -->
+      <div style="text-align: center; margin-top: 2rem">
+        <a th:href="@{/courses}" class="btn">Voir toutes les courses</a>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+  </body>
+</html>
