@@ -55,14 +55,14 @@
               </a>
 
               <!-- Organizer link -->
-              <a th:if="${#lists.contains(sessionUserRoles, 'ORGANISATEUR')}"
-                 th:href="|${contextPath}/dahsboard|" 
+              <a th:if="${sessionUserRoles != null and #lists.contains(sessionUserRoles, 'ORGANISATEUR')}"
+                 th:href="|${contextPath}/dashboard|" 
                  class="text-color-purple hover:text-color-purple/80 transition-colors duration-200 font-medium">
                 Mes Courses
               </a>
 
               <!-- Admin link -->
-              <a th:if="${#lists.contains(sessionUserRoles, 'ADMIN')}"
+              <a th:if="${sessionUserRoles != null and #lists.contains(sessionUserRoles, 'ADMIN')}"
                  th:href="|${contextPath}/admin/organizer-requests|" 
                  class="text-color-pink hover:text-color-pink/80 transition-colors duration-200 font-medium">
                 Admin
@@ -80,7 +80,7 @@
                   </svg>
                 </button>
                 <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                  <a th:href="|${contextPath}/profile|" 
+                  <a  th:href="|${contextPath}/dashboard|" 
                      class="block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-color-primary transition-colors duration-200">
                     Mon Profil
                   </a>
@@ -137,17 +137,17 @@
                  class="block px-3 py-2 text-gray-700 hover:text-color-primary hover:bg-gray-50 rounded-md transition-colors duration-200">
                 Mes Participations
               </a>
-              <a th:if="${#lists.contains(sessionUserRoles, 'ORGANISATEUR')}"
-                 th:href="|${contextPath}/dashboar11d|" 
+              <a th:if="${sessionUserRoles != null and #lists.contains(sessionUserRoles, 'ORGANISATEUR')}"
+                 th:href="|${contextPath}/dashboard|" 
                  class="block px-3 py-2 text-color-purple hover:bg-purple-50 rounded-md transition-colors duration-200">
                 Mes Courses
               </a>
-              <a th:if="${#lists.contains(sessionUserRoles, 'ADMIN')}"
+              <a th:if="${sessionUserRoles != null and #lists.contains(sessionUserRoles, 'ADMIN')}"
                  th:href="|${contextPath}/admin/organizer-requests|" 
                  class="block px-3 py-2 text-color-pink hover:bg-pink-50 rounded-md transition-colors duration-200">
                 Admin
               </a>
-              <a th:href="|${contextPath}/profile|" 
+              <a th:href="|${contextPath}/dashboard|" 
                  class="block px-3 py-2 text-gray-700 hover:text-color-primary hover:bg-gray-50 rounded-md transition-colors duration-200">
                 Mon Profil
               </a>

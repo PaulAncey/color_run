@@ -47,7 +47,6 @@ public class RegisterServlet extends HttpServlet {
 
         // Afficher le formulaire d'inscription
         Map<String, Object> variables = new HashMap<>();
-        variables.put("error", "Une erreur est survenue");
         ThymeleafUtil.processTemplate("register", variables, request, response);
     }
 
@@ -59,8 +58,12 @@ public class RegisterServlet extends HttpServlet {
         String nom = request.getParameter("nom");
         String prenom = request.getParameter("prenom");
         String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String confirmPassword = request.getParameter("confirmPassword");
+        String password = request.getParameter("motDePasse");
+
+        System.out.println("nom: " + nom);
+        System.out.println("prenom: " + prenom);
+        System.out.println("email: " + email);
+        System.out.println("password: " + password);
 
         // Validation des données
         if (nom == null || nom.trim().isEmpty() ||
@@ -70,16 +73,7 @@ public class RegisterServlet extends HttpServlet {
 
             request.setAttribute("error", "Tous les champs sont obligatoires");
             Map<String, Object> variables = new HashMap<>();
-            variables.put("error", "Une erreur est survenue");
-            ThymeleafUtil.processTemplate("register", variables, request, response);
-            return;
-        }
-
-        // Vérifier que les mots de passe correspondent
-        if (!password.equals(confirmPassword)) {
-            request.setAttribute("error", "Les mots de passe ne correspondent pas");
-            Map<String, Object> variables = new HashMap<>();
-            variables.put("error", "Une erreur est survenue");
+            variables.put("error", "Tous les champs sont obligatoires");
             ThymeleafUtil.processTemplate("register", variables, request, response);
             return;
         }
@@ -89,7 +83,7 @@ public class RegisterServlet extends HttpServlet {
             if (utilisateurService.trouverParEmail(email).isPresent()) {
                 request.setAttribute("error", "Cet email est déjà utilisé");
                 Map<String, Object> variables = new HashMap<>();
-                variables.put("error", "Une erreur est survenue");
+                variables.put("error", "Cet email est déjà utilisé");
                 ThymeleafUtil.processTemplate("register", variables, request, response);
                 return;
             }
@@ -116,7 +110,7 @@ public class RegisterServlet extends HttpServlet {
             // Gérer l'erreur
             request.setAttribute("error", "Une erreur est survenue lors de l'inscription: " + e.getMessage());
             Map<String, Object> variables = new HashMap<>();
-            variables.put("error", "Une erreur est survenue");
+            variables.put("error", "Une erreur est survenue lors de l'inscription: " + e.getMessage());
             ThymeleafUtil.processTemplate("register", variables, request, response);
         }
     }

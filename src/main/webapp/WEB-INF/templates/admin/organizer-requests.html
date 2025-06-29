@@ -4,133 +4,194 @@
     <th:block th:replace="~{fragments/head :: head}"></th:block>
     <title>Demandes d'organisateur - Color Run</title>
   </head>
-  <body>
+  <body class="min-h-screen bg-gray-50">
     <!-- Header -->
     <header th:replace="~{fragments/header :: header}"></header>
 
     <!-- Main content -->
-    <div class="container">
-      <h1>Demandes d'organisateur</h1>
-
-      <!-- Alertes -->
-      <div
-        class="alert alert-success"
-        th:if="${success}"
-        th:text="${success}"
-      ></div>
-      <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
-
-      <!-- Filtres -->
-      <div style="margin-bottom: 1.5rem; display: flex; gap: 1rem">
-        <a
-          th:href="@{/admin/organizer-requests(statut='EN_ATTENTE')}"
-          th:class="${param.statut == null || param.statut[0] == 'EN_ATTENTE' ? 'btn' : 'btn btn-secondary'}"
-          >En attente</a
-        >
-        <a
-          th:href="@{/admin/organizer-requests(statut='ACCEPTEE')}"
-          th:class="${param.statut != null && param.statut[0] == 'ACCEPTEE' ? 'btn' : 'btn btn-secondary'}"
-          >Acceptées</a
-        >
-        <a
-          th:href="@{/admin/organizer-requests(statut='REFUSEE')}"
-          th:class="${param.statut != null && param.statut[0] == 'REFUSEE' ? 'btn' : 'btn btn-secondary'}"
-          >Refusées</a
-        >
-        <a
-          th:href="@{/admin/organizer-requests}"
-          th:class="${param.statut != null && param.statut[0] == 'all' ? 'btn' : 'btn btn-secondary'}"
-          >Toutes</a
-        >
-      </div>
-
-      <!-- Aucune demande -->
-      <div class="alert alert-info" th:if="${#lists.isEmpty(demandes)}">
-        Aucune demande à afficher.
-      </div>
-
-      <!-- Liste des demandes -->
-      <div
-        class="card"
-        th:each="demande : ${demandes}"
-        style="margin-bottom: 1.5rem"
-      >
-        <div
-          class="card-header"
-          th:style="${demande.statut == 'EN_ATTENTE' ? 'background-color: #cce5ff;' : 
-                           (demande.statut == 'ACCEPTEE' ? 'background-color: #d4edda;' : 'background-color: #f8d7da;')}"
-        >
-          <div
-            style="
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-            "
-          >
-            <div>
-              <h3
-                th:text="${demande.utilisateurNom + ' ' + demande.utilisateurPrenom}"
-              >
-                Nom utilisateur
-              </h3>
-              <div th:text="${demande.utilisateurEmail}">Email</div>
+    <div class="py-8 px-4">
+      <div class="max-w-7xl mx-auto">
+        
+        <!-- Header Section -->
+        <div class="mb-8">
+          <div class="flex items-center mb-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-color-pink to-color-secondary rounded-2xl flex items-center justify-center mr-4">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              </svg>
             </div>
             <div>
-              <span
-                class="badge"
-                th:text="${demande.statut}"
-                th:style="${demande.statut == 'EN_ATTENTE' ? 'background-color: #007bff; color: white; padding: 0.5rem;' : 
-                                        (demande.statut == 'ACCEPTEE' ? 'background-color: #28a745; color: white; padding: 0.5rem;' : 'background-color: #dc3545; color: white; padding: 0.5rem;')}"
-              >
-                Statut
-              </span>
+              <h1 class="text-3xl font-bold text-gray-900">Demandes d'organisateur</h1>
+              <p class="text-gray-600">Gérez les candidatures pour devenir organisateur</p>
             </div>
+          </div>
+
+          <!-- Alertes -->
+          <div th:if="${param.success}" class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-center">
+            <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <p class="text-green-700 font-medium" th:text="${param.success}">Message de succès</p>
+          </div>
+          <div th:if="${param.error}" class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center">
+            <svg class="w-5 h-5 text-red-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <p class="text-red-700 font-medium" th:text="${param.error}">Message d'erreur</p>
           </div>
         </div>
-        <div class="card-body">
-          <div style="margin-bottom: 1rem">
-            <strong>Date de demande :</strong>
-            <span
-              th:text="${#dates.format(demande.dateDemande, 'dd/MM/yyyy HH:mm')}"
-              >Date</span
-            >
-          </div>
 
-          <div style="margin-bottom: 1rem">
-            <h4>Motif de la demande :</h4>
-            <p th:text="${demande.motif}" style="white-space: pre-line">
-              Motif
-            </p>
+        <!-- Filtres -->
+        <div class="bg-white rounded-2xl shadow-sm border p-6 mb-8">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7V4z"/>
+            </svg>
+            Filtrer par statut
+          </h3>
+          <div class="flex flex-wrap gap-3">
+            <a th:href="@{/admin/organizer-requests(statut='EN_ATTENTE')}"
+               th:class="${param.statut == null or param.statut == 'EN_ATTENTE' ? 'inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 font-medium rounded-xl border border-blue-200 hover:bg-blue-200 transition-colors duration-200' : 'inline-flex items-center px-4 py-2 bg-gray-100 text-gray-600 font-medium rounded-xl border border-gray-200 hover:bg-gray-200 transition-colors duration-200'}">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              En attente
+            </a>
+            <a th:href="@{/admin/organizer-requests(statut='ACCEPTEE')}"
+               th:class="${param.statut == 'ACCEPTEE' ? 'inline-flex items-center px-4 py-2 bg-green-100 text-green-800 font-medium rounded-xl border border-green-200 hover:bg-green-200 transition-colors duration-200' : 'inline-flex items-center px-4 py-2 bg-gray-100 text-gray-600 font-medium rounded-xl border border-gray-200 hover:bg-gray-200 transition-colors duration-200'}">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              Acceptées
+            </a>
+            <a th:href="@{/admin/organizer-requests(statut='REFUSEE')}"
+               th:class="${param.statut == 'REFUSEE' ? 'inline-flex items-center px-4 py-2 bg-red-100 text-red-800 font-medium rounded-xl border border-red-200 hover:bg-red-200 transition-colors duration-200' : 'inline-flex items-center px-4 py-2 bg-gray-100 text-gray-600 font-medium rounded-xl border border-gray-200 hover:bg-gray-200 transition-colors duration-200'}">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+              Refusées
+            </a>
+            <a th:href="@{/admin/organizer-requests}"
+               th:class="${param.statut == 'all' ? 'inline-flex items-center px-4 py-2 bg-purple-100 text-purple-800 font-medium rounded-xl border border-purple-200 hover:bg-purple-200 transition-colors duration-200' : 'inline-flex items-center px-4 py-2 bg-gray-100 text-gray-600 font-medium rounded-xl border border-gray-200 hover:bg-gray-200 transition-colors duration-200'}">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+              </svg>
+              Toutes
+            </a>
           </div>
+        </div>
 
-          <!-- Commentaire admin si traité -->
-          <div
-            th:if="${demande.statut != 'EN_ATTENTE'}"
-            style="margin-bottom: 1rem"
-          >
-            <h4>Commentaire de l'administrateur :</h4>
-            <p
-              th:text="${demande.commentaireAdmin}"
-              style="white-space: pre-line"
-            >
-              Commentaire
-            </p>
-            <div>
-              <strong>Traité le :</strong>
-              <span
-                th:text="${#dates.format(demande.dateTraitement, 'dd/MM/yyyy HH:mm')}"
-                >Date traitement</span
-              >
+        <!-- Aucune demande -->
+        <div th:if="${demandes == null or #lists.isEmpty(demandes)}" class="text-center py-12">
+          <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">Aucune demande à afficher</h3>
+          <p class="text-gray-600">Aucune demande ne correspond aux critères sélectionnés.</p>
+        </div>
+
+        <!-- Liste des demandes -->
+        <div class="space-y-6" th:if="${demandes != null and not #lists.isEmpty(demandes)}">
+          <div th:each="demande : ${demandes}" class="bg-white rounded-2xl shadow-sm border overflow-hidden hover:shadow-md transition-shadow duration-200">
+            
+            <!-- Header de la carte -->
+            <div th:class="${demande.statut == 'EN_ATTENTE' ? 'bg-blue-50 border-b border-blue-100 p-6' : 
+                           (demande.statut == 'ACCEPTEE' ? 'bg-green-50 border-b border-green-100 p-6' : 'bg-red-50 border-b border-red-100 p-6')}">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <div th:class="${demande.statut == 'EN_ATTENTE' ? 'w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4' : 
+                                 (demande.statut == 'ACCEPTEE' ? 'w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mr-4' : 'w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mr-4')}">
+                    <svg th:class="${demande.statut == 'EN_ATTENTE' ? 'w-6 h-6 text-blue-600' : 
+                                   (demande.statut == 'ACCEPTEE' ? 'w-6 h-6 text-green-600' : 'w-6 h-6 text-red-600')}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path th:if="${demande.statut == 'EN_ATTENTE'}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      <path th:if="${demande.statut == 'ACCEPTEE'}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      <path th:if="${demande.statut == 'REFUSEE'}" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="text-lg font-semibold text-gray-900" 
+                        th:text="${(demande.utilisateurNom != null ? demande.utilisateurNom : 'N/A') + ' ' + (demande.utilisateurPrenom != null ? demande.utilisateurPrenom : '')}">
+                      Nom utilisateur
+                    </h3>
+                    <p class="text-sm text-gray-600" th:text="${demande.utilisateurEmail != null ? demande.utilisateurEmail : 'Email non disponible'}">Email</p>
+                  </div>
+                </div>
+                <div>
+                  <span th:class="${demande.statut == 'EN_ATTENTE' ? 'inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800' : 
+                                  (demande.statut == 'ACCEPTEE' ? 'inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800' : 'inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800')}"
+                        th:text="${demande.statut == 'EN_ATTENTE' ? 'En attente' : 
+                                 (demande.statut == 'ACCEPTEE' ? 'Acceptée' : 'Refusée')}">
+                    Statut
+                  </span>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <!-- Actions pour les demandes en attente -->
-          <div th:if="${demande.statut == 'EN_ATTENTE'}">
-            <a
-              th:href="@{'/admin/organizer-requests/' + ${demande.idDemande}}"
-              class="btn"
-              >Traiter la demande</a
-            >
+            <!-- Corps de la carte -->
+            <div class="p-6">
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <div class="mb-4">
+                    <label class="text-sm font-medium text-gray-700 flex items-center mb-2">
+                      <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 0V7a2 2 0 012-2h4a2 2 0 012 2v0M8 7v10a2 2 0 002 2h4a2 2 0 002-2V7m-6 0h6"/>
+                      </svg>
+                      Date de demande
+                    </label>
+                    <p class="text-gray-900" th:text="${demande.dateDemande != null ? #dates.format(demande.dateDemande, 'dd/MM/yyyy à HH:mm') : 'Date non disponible'}">Date</p>
+                  </div>
+
+                  <div>
+                    <label class="text-sm font-medium text-gray-700 flex items-center mb-2">
+                      <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                      </svg>
+                      Motivation
+                    </label>
+                    <div class="bg-gray-50 rounded-lg p-4 max-h-32 overflow-y-auto">
+                      <p class="text-gray-700 text-sm whitespace-pre-line" th:text="${demande.motif != null ? demande.motif : 'Aucun motif fourni'}">Motif</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div th:if="${demande.statut != 'EN_ATTENTE'}">
+                  <div class="mb-4" th:if="${demande.dateTraitement != null}">
+                    <label class="text-sm font-medium text-gray-700 flex items-center mb-2">
+                      <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                      Traité le
+                    </label>
+                    <p class="text-gray-900" th:text="${#dates.format(demande.dateTraitement, 'dd/MM/yyyy à HH:mm')}">Date traitement</p>
+                  </div>
+
+                  <div th:if="${demande.commentaireAdmin != null}">
+                    <label class="text-sm font-medium text-gray-700 flex items-center mb-2">
+                      <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+                      </svg>
+                      Commentaire administrateur
+                    </label>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                      <p class="text-gray-700 text-sm whitespace-pre-line" th:text="${demande.commentaireAdmin}">Commentaire</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Actions pour les demandes en attente -->
+              <div th:if="${demande.statut == 'EN_ATTENTE'}" class="mt-6 pt-6 border-t border-gray-100">
+                <a th:href="@{'/admin/organizer-requests/' + ${demande.idDemande}}"
+                   class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-color-primary to-color-secondary hover:from-color-primary/90 hover:to-color-secondary/90 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
+                  <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                  </svg>
+                  Traiter la demande
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>

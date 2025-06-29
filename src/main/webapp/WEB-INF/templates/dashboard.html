@@ -69,7 +69,7 @@
         </div>
 
         <!-- Total Courses (for organizers) -->
-        <div th:if="${#lists.contains(sessionUserRoles, 'ORGANISATEUR')}"
+        <div th:if="${sessionUserRoles != null and #lists.contains(sessionUserRoles, 'ORGANISATEUR')}"
              class="bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow duration-200">
           <div class="flex items-center">
             <div class="w-12 h-12 bg-color-purple/10 rounded-lg flex items-center justify-center">
@@ -85,7 +85,7 @@
         </div>
 
         <!-- Pending Requests (for admin) -->
-        <div th:if="${#lists.contains(sessionUserRoles, 'ADMIN')}"
+        <div th:if="${sessionUserRoles != null and #lists.contains(sessionUserRoles, 'ADMIN')}"
              class="bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow duration-200">
           <div class="flex items-center">
             <div class="w-12 h-12 bg-color-pink/10 rounded-lg flex items-center justify-center">
@@ -142,7 +142,7 @@
             </a>
 
             <!-- Organizer Actions -->
-            <div th:if="${#lists.contains(sessionUserRoles, 'ORGANISATEUR')}">
+            <div th:if="${sessionUserRoles != null and #lists.contains(sessionUserRoles, 'ORGANISATEUR')}">
               <a th:href="|${contextPath}/organisateur/courses|" 
                  class="flex items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200 group">
                 <div class="w-10 h-10 bg-color-purple/10 rounded-lg flex items-center justify-center group-hover:bg-color-purple/20 transition-colors duration-200">
@@ -161,7 +161,7 @@
             </div>
 
             <!-- Admin Actions -->
-            <div th:if="${#lists.contains(sessionUserRoles, 'ADMIN')}">
+            <div th:if="${sessionUserRoles != null and #lists.contains(sessionUserRoles, 'ADMIN')}">
               <a th:href="|${contextPath}/admin/organizer-requests|" 
                  class="flex items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200 group">
                 <div class="w-10 h-10 bg-color-pink/10 rounded-lg flex items-center justify-center group-hover:bg-color-pink/20 transition-colors duration-200">
@@ -180,7 +180,7 @@
             </div>
 
             <!-- Request Organizer Role -->
-            <div th:if="${!#lists.contains(sessionUserRoles, 'ORGANISATEUR') && canRequestOrganizerRole}">
+            <div th:if="${sessionUserRoles == null or (!#lists.contains(sessionUserRoles, 'ORGANISATEUR') and canRequestOrganizerRole)}">
               <a th:href="|${contextPath}/user/request-organizer|" 
                  class="flex items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200 group">
                 <div class="w-10 h-10 bg-color-green/10 rounded-lg flex items-center justify-center group-hover:bg-color-green/20 transition-colors duration-200">

@@ -4,60 +4,165 @@
     <th:block th:replace="~{fragments/head :: head}"></th:block>
     <title>Devenir organisateur - Color Run</title>
   </head>
-  <body>
+  <body class="min-h-screen bg-gray-50">
     <!-- Header -->
     <header th:replace="~{fragments/header :: header}"></header>
 
     <!-- Main content -->
-    <div class="container">
-      <div class="form-container" style="max-width: 700px">
-        <h1 class="form-title">Devenir organisateur</h1>
-
-        <!-- Alertes -->
-        <div
-          class="alert alert-danger"
-          th:if="${error}"
-          th:text="${error}"
-        ></div>
-
-        <!-- Introduction -->
-        <div style="margin-bottom: 2rem">
-          <p>
-            Vous souhaitez organiser vos propres Color Runs ? Devenez
-            organisateur officiel et profitez de notre plateforme pour gérer vos
-            événements.
-          </p>
-          <p>
-            Pour cela, nous vous demandons de remplir ce formulaire de demande.
-            Notre équipe examinera votre candidature et vous répondra dans les
-            plus brefs délais.
+    <div class="py-12 px-4">
+      <div class="max-w-4xl mx-auto">
+        
+        <!-- Hero Section -->
+        <div class="text-center mb-12">
+          <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-color-primary via-color-secondary to-color-accent rounded-3xl mb-6">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+            </svg>
+          </div>
+          <h1 class="text-4xl font-bold text-gray-900 mb-4">Devenir organisateur</h1>
+          <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+            Rejoignez notre équipe d'organisateurs et créez des événements inoubliables
           </p>
         </div>
 
-        <!-- Formulaire de demande -->
-        <form th:action="@{/user/request-organizer}" method="post">
-          <div class="form-group">
-            <label for="motif"
-              >Pourquoi souhaitez-vous devenir organisateur ?</label
-            >
-            <textarea id="motif" name="motif" required rows="10"></textarea>
-            <small
-              >Expliquez vos motivations, votre expérience dans l'organisation
-              d'événements, vos idées pour de futures courses, etc.</small
-            >
+        <!-- Alert -->
+        <div th:if="${error}" class="mb-8 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center max-w-2xl mx-auto">
+          <svg class="w-5 h-5 text-red-500 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <p class="text-red-700 font-medium" th:text="${error}"></p>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-8">
+          
+          <!-- Left Column - Benefits -->
+          <div class="lg:col-span-1 space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <div class="w-8 h-8 bg-color-primary/10 rounded-lg flex items-center justify-center mr-3">
+                  <svg class="w-4 h-4 text-color-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                  </svg>
+                </div>
+                Avantages organisateur
+              </h3>
+              <ul class="space-y-3 text-sm text-gray-600">
+                <li class="flex items-start">
+                  <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  Créez vos propres événements
+                </li>
+                <li class="flex items-start">
+                  <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  Gérez les inscriptions facilement
+                </li>
+                <li class="flex items-start">
+                  <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  Communiquez avec les participants
+                </li>
+                <li class="flex items-start">
+                  <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  Accès aux outils d'organisation
+                </li>
+                <li class="flex items-start">
+                  <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  Support technique dédié
+                </li>
+              </ul>
+            </div>
+
+            <div class="bg-gradient-to-br from-color-accent/10 to-color-secondary/10 rounded-2xl p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+                <div class="w-8 h-8 bg-color-accent/20 rounded-lg flex items-center justify-center mr-3">
+                  <svg class="w-4 h-4 text-color-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
+                Processus de validation
+              </h3>
+              <div class="space-y-3 text-sm text-gray-600">
+                <div class="flex items-center">
+                  <div class="w-6 h-6 bg-color-primary rounded-full flex items-center justify-center text-white text-xs font-bold mr-3">1</div>
+                  <span>Soumission de votre candidature</span>
+                </div>
+                <div class="flex items-center">
+                  <div class="w-6 h-6 bg-color-secondary rounded-full flex items-center justify-center text-white text-xs font-bold mr-3">2</div>
+                  <span>Examen par notre équipe</span>
+                </div>
+                <div class="flex items-center">
+                  <div class="w-6 h-6 bg-color-accent rounded-full flex items-center justify-center text-white text-xs font-bold mr-3">3</div>
+                  <span>Notification par email</span>
+                </div>
+                <div class="flex items-center">
+                  <div class="w-6 h-6 bg-color-green rounded-full flex items-center justify-center text-white text-xs font-bold mr-3">4</div>
+                  <span>Activation de votre compte</span>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <button type="submit" class="btn btn-block">
-            Soumettre ma demande
-          </button>
+          <!-- Right Column - Form -->
+          <div class="lg:col-span-2">
+            <div class="bg-white rounded-2xl shadow-sm border p-8">
+              <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Candidature d'organisateur</h2>
+                <p class="text-gray-600">
+                  Partagez vos motivations et votre expérience pour rejoindre notre équipe d'organisateurs.
+                </p>
+              </div>
 
-          <div style="margin-top: 1rem; font-size: 0.9rem; color: #6c757d">
-            <p>
-              Après soumission, votre demande sera examinée par notre équipe.
-              Vous recevrez une notification par email dès qu'elle sera traitée.
-            </p>
+              <form th:action="@{/user/request-organizer}" method="post" class="space-y-6">
+                <div>
+                  <label for="motif" class="block text-sm font-medium text-gray-700 mb-2">
+                    Pourquoi souhaitez-vous devenir organisateur ? *
+                  </label>
+                  <textarea 
+                    id="motif" 
+                    name="motif" 
+                    required 
+                    rows="12"
+                    placeholder="Expliquez vos motivations, votre expérience dans l'organisation d'événements, vos idées pour de futures courses, etc."
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-color-primary focus:border-transparent transition-all duration-200 resize-none"
+                  ></textarea>
+                  <p class="text-sm text-gray-500 mt-2">
+                    💡 Conseils : Mentionnez votre expérience, vos projets d'événements, votre motivation et votre vision pour les Color Runs.
+                  </p>
+                </div>
+
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                  <div class="flex items-start">
+                    <svg class="w-5 h-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <div class="text-sm text-blue-700">
+                      <p class="font-medium mb-1">À savoir :</p>
+                      <p>Après soumission, votre demande sera examinée par notre équipe dans un délai de 3 à 5 jours ouvrés. Vous recevrez une notification par email dès qu'elle sera traitée.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <button 
+                  type="submit"
+                  class="w-full bg-gradient-to-r from-color-primary to-color-secondary hover:from-color-primary/90 hover:to-color-secondary/90 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center"
+                >
+                  <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                  </svg>
+                  Soumettre ma candidature
+                </button>
+              </form>
+            </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
 

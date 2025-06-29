@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import fr.esgi.color_run.business.DemandeOrganisateur;
+import fr.esgi.color_run.business.DemandeOrganisateurWithUser;
 import fr.esgi.color_run.config.ServiceFactory;
 import fr.esgi.color_run.service.DemandeOrganisateurService;
 import fr.esgi.color_run.service.ServiceException;
@@ -179,12 +180,12 @@ public class DemandeOrganisateurServlet extends HttpServlet {
 
         // Récupérer les demandes en attente par défaut
         String statut = request.getParameter("statut");
-        List<DemandeOrganisateur> demandes;
+        List<DemandeOrganisateurWithUser> demandes;
 
         if (statut != null && !statut.trim().isEmpty()) {
-            demandes = demandeOrganisateurService.trouverParStatut(statut);
+            demandes = demandeOrganisateurService.trouverParStatutAvecUtilisateur(statut);
         } else {
-            demandes = demandeOrganisateurService.trouverParStatut("EN_ATTENTE");
+            demandes = demandeOrganisateurService.trouverParStatutAvecUtilisateur("EN_ATTENTE");
         }
 
         Map<String, Object> variables = new HashMap<>();
@@ -203,12 +204,25 @@ public class DemandeOrganisateurServlet extends HttpServlet {
         int demandeId = Integer.parseInt(pathInfo.substring(pathInfo.lastIndexOf('/') + 1));
 
         // Récupérer les détails de la demande
-        Optional<DemandeOrganisateur> demande = demandeOrganisateurService.trouverParId(demandeId);
+        Optional<DemandeOrganisateur> optDemande = demandeOrganisateurService.trouverParId(demandeId);
 
-        if (demande.isPresent()) {
-            Map<String, Object> variables = new HashMap<>();
-            variables.put("demande", demande.get());
-            ThymeleafUtil.processTemplate("admin/organizer-request-details", variables, request, response);
+        if (optDemande.isPresent()) {
+            DemandeOrganisateur demande = optDemande.get();
+
+            // Récupérer les informations de l'utilisateur
+            Optional<fr.esgi.color_run.business.Utilisateur> optUtilisateur = utilisateurService
+                    .trouverParId(demande.getIdUtilisateur());
+
+            if (optUtilisateur.isPresent()) {
+                DemandeOrganisateurWithUser demandeWithUser = DemandeOrganisateurWithUser.from(demande,
+                        optUtilisateur.get());
+
+                Map<String, Object> variables = new HashMap<>();
+                variables.put("demande", demandeWithUser);
+                ThymeleafUtil.processTemplate("admin/organizer-request-details", variables, request, response);
+            } else {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Utilisateur associé non trouvé");
+            }
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Demande non trouvée");
         }
