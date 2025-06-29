@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+  <th:block th:fragment="head">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${pageTitle != null ? pageTitle : 'Color Run'}">Color Run</title>
+    
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'color-primary': '#FF6B35',
+              'color-secondary': '#F7931E',
+              'color-accent': '#FFE135',
+              'color-pink': '#FF006E',
+              'color-purple': '#8338EC',
+              'color-blue': '#3A86FF',
+              'color-green': '#06FFA5',
+            }
+          }
+        }
+      }
+    </script>
+    
+    <!-- CSS principal -->
+    <link rel="stylesheet" th:href="|${contextPath}/resources/css/main.css|" />
+  </th:block>
+</body>
+</html> 
