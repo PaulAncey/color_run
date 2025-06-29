@@ -4,271 +4,266 @@
     <th:block th:replace="~{fragments/head :: head}"></th:block>
     <title>Tableau de bord - Color Run</title>
   </head>
-  <body>
+  <body class="bg-gray-50">
     <!-- Header -->
     <header th:replace="~{fragments/header :: header}"></header>
 
     <!-- Main content -->
-    <div class="container">
-      <h1 class="text-red-500">Tableau de bord</h1>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Success Alert -->
+      <div th:if="${success}" 
+           class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-center">
+        <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <p class="text-green-700 font-medium" th:text="${success}">Message de succès</p>
+      </div>
 
-      <!-- Alertes -->
-      <div
-        class="alert alert-success"
-        th:if="${success}"
-        th:text="${success}"
-      ></div>
-
-      <!-- Résumé de l'utilisateur -->
-      <div class="card" style="margin-bottom: 2rem">
-        <div class="card-header">
-          <h2>
-            Bienvenue,
-            <span th:text="${sessionUser.prenom + ' ' + sessionUser.nom}"
-              >Utilisateur</span
-            >
-            !
-          </h2>
+      <!-- Welcome Card -->
+      <div class="bg-gradient-to-r from-color-primary via-color-secondary to-color-accent rounded-2xl p-8 mb-8 text-white relative overflow-hidden">
+        <div class="relative z-10">
+          <h1 class="text-3xl md:text-4xl font-bold mb-2">
+            Bienvenue, <span th:text="${sessionUser.prenom}">Utilisateur</span> !
+          </h1>
+          <p class="text-white/90 text-lg">
+            Découvrez vos activités récentes et gérez vos participations aux Color Runs.
+          </p>
         </div>
-        <div class="card-body">
-          <div style="display: flex; flex-wrap: wrap; gap: 2rem">
-            <!-- Informations de profil -->
-            <div style="flex: 1; min-width: 300px">
-              <h3>Mes informations</h3>
-              <p>
-                <strong>Email :</strong>
-                <span th:text="${sessionUser.email}">Email</span>
-              </p>
-              <p>
-                <strong>Membre depuis :</strong>
-                <span
-                  th:text="${#dates.format(sessionUser.dateCreation, 'dd/MM/yyyy')}"
-                  >Date</span
-                >
-              </p>
-              <p>
-                <strong>Rôles :</strong>
-                <span th:text="${#strings.listJoin(userRoles, ', ')}"
-                  >Rôles</span
-                >
-              </p>
+        
+        <!-- Decorative elements -->
+        <div class="absolute top-4 right-4 w-20 h-20 bg-white/10 rounded-full"></div>
+        <div class="absolute bottom-4 right-12 w-12 h-12 bg-white/20 rounded-full"></div>
+        <div class="absolute top-12 right-24 w-6 h-6 bg-white/30 rounded-full"></div>
+      </div>
 
-              <div style="margin-top: 1rem">
-                <a th:href="|${contextPath}/profile|" class="btn">Modifier mon profil</a>
-              </div>
+      <!-- Stats Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Total Participations -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow duration-200">
+          <div class="flex items-center">
+            <div class="w-12 h-12 bg-color-primary/10 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-color-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 116.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
+              </svg>
             </div>
+            <div class="ml-4">
+              <p class="text-sm text-gray-600">Participations</p>
+              <p class="text-2xl font-bold text-gray-900" th:text="${participationsCount != null ? participationsCount : '0'}">0</p>
+            </div>
+          </div>
+        </div>
 
-            <!-- Stats et liens rapides -->
-            <div style="flex: 1; min-width: 300px">
-              <h3>Mes statistiques</h3>
-              <p>
-                <strong>Courses à venir :</strong>
-                <span th:text="${nbParticipations}">0</span>
-              </p>
-              <p>
-                <strong>Courses organisées :</strong>
-                <span
-                  th:if="${#lists.contains(userRoles, 'ORGANISATEUR')}"
-                  th:text="${nbCoursesOrganisees}"
-                  >0</span
-                ><span th:unless="${#lists.contains(userRoles, 'ORGANISATEUR')}"
-                  >-</span
-                >
-              </p>
+        <!-- Upcoming Races -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow duration-200">
+          <div class="flex items-center">
+            <div class="w-12 h-12 bg-color-accent/10 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-color-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm text-gray-600">Prochaines courses</p>
+              <p class="text-2xl font-bold text-gray-900" th:text="${upcomingCoursesCount != null ? upcomingCoursesCount : '0'}">0</p>
+            </div>
+          </div>
+        </div>
 
-              <div style="margin-top: 1.5rem">
-                <h3>Liens rapides</h3>
-                <div style="margin-top: 0.5rem">
-                  <a
-                    th:href="|${contextPath}/participations|"
-                    class="btn"
-                    style="margin-right: 0.5rem"
-                    >Mes participations</a
-                  >
-                  <a th:href="|${contextPath}/courses|" class="btn">Voir les courses</a>
-                </div>
+        <!-- Total Courses (for organizers) -->
+        <div th:if="${#lists.contains(sessionUserRoles, 'ORGANISATEUR')}"
+             class="bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow duration-200">
+          <div class="flex items-center">
+            <div class="w-12 h-12 bg-color-purple/10 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-color-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm text-gray-600">Mes courses</p>
+              <p class="text-2xl font-bold text-gray-900" th:text="${organizedCoursesCount != null ? organizedCoursesCount : '0'}">0</p>
+            </div>
+          </div>
+        </div>
 
-                <!-- Liens pour organisateur -->
-                <div
-                  th:if="${#lists.contains(userRoles, 'ORGANISATEUR')}"
-                  style="margin-top: 1rem"
-                >
-                  <a
-                    th:href="|${contextPath}/organisateur/courses|"
-                    class="btn"
-                    style="margin-right: 0.5rem"
-                    >Mes courses</a
-                  >
-                  <a th:href="|${contextPath}/organisateur/courses/create|" class="btn"
-                    >Créer une course</a
-                  >
-                </div>
-
-                <!-- Liens pour admin -->
-                <div
-                  th:if="${#lists.contains(userRoles, 'ADMIN')}"
-                  style="margin-top: 1rem"
-                >
-                  <a th:href="|${contextPath}/admin/organizer-requests|" class="btn"
-                    >Demandes d'organisateur</a
-                  >
-                </div>
-
-                <!-- Lien pour demander à être organisateur -->
-                <div
-                  th:if="${!#lists.contains(userRoles, 'ORGANISATEUR') && canRequestOrganizerRole}"
-                  style="margin-top: 1rem"
-                >
-                  <a th:href="|${contextPath}/user/request-organizer|" class="btn"
-                    >Devenir organisateur</a
-                  >
-                </div>
-
-                <!-- Message si demande en attente -->
-                <div
-                  th:if="${!#lists.contains(userRoles, 'ORGANISATEUR') && !canRequestOrganizerRole}"
-                  style="margin-top: 1rem"
-                >
-                  <p class="alert alert-info">
-                    Votre demande pour devenir organisateur est en attente de
-                    validation.
-                  </p>
-                </div>
-              </div>
+        <!-- Pending Requests (for admin) -->
+        <div th:if="${#lists.contains(sessionUserRoles, 'ADMIN')}"
+             class="bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow duration-200">
+          <div class="flex items-center">
+            <div class="w-12 h-12 bg-color-pink/10 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-color-pink" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm text-gray-600">Demandes en attente</p>
+              <p class="text-2xl font-bold text-gray-900" th:text="${pendingRequestsCount != null ? pendingRequestsCount : '0'}">0</p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Prochaines courses inscrites -->
-      <div class="card" style="margin-bottom: 2rem">
-        <div class="card-header">
-          <h2>Mes prochaines courses</h2>
-        </div>
-        <div class="card-body">
-          <div
-            class="alert alert-info"
-            th:if="${#lists.isEmpty(participations)}"
-          >
-            Vous n'êtes inscrit à aucune course pour le moment.
-            <a th:href="|${contextPath}/courses|" class="btn" style="margin-left: 1rem"
-              >Voir les courses disponibles</a
-            >
+      <!-- Quick Actions -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Left Column - Quick Actions -->
+        <div class="bg-white rounded-xl shadow-sm border">
+          <div class="p-6 border-b border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-900">Actions rapides</h2>
           </div>
+          <div class="p-6 space-y-4">
+            <a th:href="|${contextPath}/courses|" 
+               class="flex items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200 group">
+              <div class="w-10 h-10 bg-color-primary/10 rounded-lg flex items-center justify-center group-hover:bg-color-primary/20 transition-colors duration-200">
+                <svg class="w-5 h-5 text-color-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+              </div>
+              <div class="ml-4">
+                <h3 class="font-medium text-gray-900">Découvrir les courses</h3>
+                <p class="text-sm text-gray-600">Trouvez votre prochaine Color Run</p>
+              </div>
+              <svg class="w-5 h-5 text-gray-400 ml-auto group-hover:text-color-primary transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </a>
 
-          <div th:unless="${#lists.isEmpty(participations)}">
-            <table>
-              <thead>
-                <tr>
-                  <th>Course</th>
-                  <th>Date</th>
-                  <th>Lieu</th>
-                  <th>N° dossard</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr th:each="participation : ${participations}">
-                  <td th:text="${participation.course.nom}">Nom course</td>
-                  <td
-                    th:text="${#dates.format(participation.course.dateCourse, 'dd/MM/yyyy')}"
-                  >
-                    Date
-                  </td>
-                  <td th:text="${participation.course.ville}">Ville</td>
-                  <td th:text="${participation.numeroDossard}">Dossard</td>
-                  <td>
-                    <a
-                      th:href="@{'/courses/' + ${participation.idCourse}}"
-                      class="btn btn-secondary"
-                      >Détails</a
-                    >
-                    <a
-                      th:href="@{'/participations/bib/' + ${participation.idParticipation}}"
-                      class="btn"
-                      >Dossard</a
-                    >
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <a th:href="|${contextPath}/participations|" 
+               class="flex items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200 group">
+              <div class="w-10 h-10 bg-color-accent/10 rounded-lg flex items-center justify-center group-hover:bg-color-accent/20 transition-colors duration-200">
+                <svg class="w-5 h-5 text-color-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                </svg>
+              </div>
+              <div class="ml-4">
+                <h3 class="font-medium text-gray-900">Mes participations</h3>
+                <p class="text-sm text-gray-600">Gérer mes inscriptions</p>
+              </div>
+              <svg class="w-5 h-5 text-gray-400 ml-auto group-hover:text-color-accent transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </a>
 
-            <div style="text-align: center; margin-top: 1rem">
-              <a th:href="@{/participations}" class="btn"
-                >Voir toutes mes participations</a
-              >
+            <!-- Organizer Actions -->
+            <div th:if="${#lists.contains(sessionUserRoles, 'ORGANISATEUR')}">
+              <a th:href="|${contextPath}/organisateur/courses|" 
+                 class="flex items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200 group">
+                <div class="w-10 h-10 bg-color-purple/10 rounded-lg flex items-center justify-center group-hover:bg-color-purple/20 transition-colors duration-200">
+                  <svg class="w-5 h-5 text-color-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                  </svg>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-medium text-gray-900">Gérer mes courses</h3>
+                  <p class="text-sm text-gray-600">Créer et organiser des événements</p>
+                </div>
+                <svg class="w-5 h-5 text-gray-400 ml-auto group-hover:text-color-purple transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+
+            <!-- Admin Actions -->
+            <div th:if="${#lists.contains(sessionUserRoles, 'ADMIN')}">
+              <a th:href="|${contextPath}/admin/organizer-requests|" 
+                 class="flex items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200 group">
+                <div class="w-10 h-10 bg-color-pink/10 rounded-lg flex items-center justify-center group-hover:bg-color-pink/20 transition-colors duration-200">
+                  <svg class="w-5 h-5 text-color-pink" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                  </svg>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-medium text-gray-900">Gérer les demandes</h3>
+                  <p class="text-sm text-gray-600">Valider les organisateurs</p>
+                </div>
+                <svg class="w-5 h-5 text-gray-400 ml-auto group-hover:text-color-pink transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+
+            <!-- Request Organizer Role -->
+            <div th:if="${!#lists.contains(sessionUserRoles, 'ORGANISATEUR') && canRequestOrganizerRole}">
+              <a th:href="|${contextPath}/user/request-organizer|" 
+                 class="flex items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200 group">
+                <div class="w-10 h-10 bg-color-green/10 rounded-lg flex items-center justify-center group-hover:bg-color-green/20 transition-colors duration-200">
+                  <svg class="w-5 h-5 text-color-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                  </svg>
+                </div>
+                <div class="ml-4">
+                  <h3 class="font-medium text-gray-900">Devenir organisateur</h3>
+                  <p class="text-sm text-gray-600">Demander le statut d'organisateur</p>
+                </div>
+                <svg class="w-5 h-5 text-gray-400 ml-auto group-hover:text-color-green transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Mes courses (si organisateur) -->
-      <div class="card" th:if="${#lists.contains(userRoles, 'ORGANISATEUR')}">
-        <div class="card-header">
-          <h2>Mes courses organisées</h2>
-        </div>
-        <div class="card-body">
-          <div
-            class="alert alert-info"
-            th:if="${#lists.isEmpty(coursesOrganisees)}"
-          >
-            Vous n'avez pas encore créé de course.
-            <a
-              th:href="@{/organisateur/courses/create}"
-              class="btn"
-              style="margin-left: 1rem"
-              >Créer une course</a
-            >
+        <!-- Right Column - User Info & Recent Activity -->
+        <div class="space-y-6">
+          <!-- User Info Card -->
+          <div class="bg-white rounded-xl shadow-sm border">
+            <div class="p-6 border-b border-gray-200">
+              <h2 class="text-xl font-semibold text-gray-900">Mon profil</h2>
+            </div>
+            <div class="p-6">
+              <div class="flex items-center mb-4">
+                <div class="w-16 h-16 bg-gradient-to-br from-color-primary to-color-secondary rounded-full flex items-center justify-center">
+                  <span class="text-white text-xl font-bold" th:text="${sessionUser.prenom.substring(0, 1).toUpperCase() + sessionUser.nom.substring(0, 1).toUpperCase()}">UN</span>
+                </div>
+                <div class="ml-4">
+                  <h3 class="text-lg font-semibold text-gray-900" th:text="${sessionUser.prenom + ' ' + sessionUser.nom}">Nom Utilisateur</h3>
+                  <p class="text-gray-600" th:text="${sessionUser.email}">email@example.com</p>
+                </div>
+              </div>
+              
+              <div class="space-y-2">
+                <h4 class="font-medium text-gray-900">Mes rôles :</h4>
+                <div class="flex flex-wrap gap-2">
+                  <span th:each="role : ${sessionUserRoles}" 
+                        th:class="${role == 'ADMIN' ? 'px-3 py-1 bg-color-pink/10 text-color-pink text-sm rounded-full' : 
+                                  (role == 'ORGANISATEUR' ? 'px-3 py-1 bg-color-purple/10 text-color-purple text-sm rounded-full' : 
+                                  'px-3 py-1 bg-color-primary/10 text-color-primary text-sm rounded-full')}"
+                        th:text="${role}">
+                    Rôle
+                  </span>
+                </div>
+              </div>
+              
+              <div class="mt-6">
+                <a th:href="|${contextPath}/profile|" 
+                   class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-lg transition-colors duration-200">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                  </svg>
+                  Modifier mon profil
+                </a>
+              </div>
+            </div>
           </div>
 
-          <div th:unless="${#lists.isEmpty(coursesOrganisees)}">
-            <table>
-              <thead>
-                <tr>
-                  <th>Nom</th>
-                  <th>Date</th>
-                  <th>Ville</th>
-                  <th>Participants</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr th:each="course : ${coursesOrganisees}">
-                  <td th:text="${course.nom}">Nom course</td>
-                  <td
-                    th:text="${#dates.format(course.dateCourse, 'dd/MM/yyyy')}"
-                  >
-                    Date
-                  </td>
-                  <td th:text="${course.ville}">Ville</td>
-                  <td
-                    th:text="${course.nbInscrits + '/' + course.nbMaxParticipants}"
-                  >
-                    Participants
-                  </td>
-                  <td>
-                    <a
-                      th:href="@{'/courses/' + ${course.idCourse}}"
-                      class="btn btn-secondary"
-                      >Détails</a
-                    >
-                    <a
-                      th:href="@{'/organisateur/courses/edit/' + ${course.idCourse}}"
-                      class="btn"
-                      >Modifier</a
-                    >
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-            <div style="text-align: center; margin-top: 1rem">
-              <a th:href="@{/organisateur/courses}" class="btn"
-                >Gérer mes courses</a
-              >
-              <a th:href="@{/organisateur/courses/create}" class="btn"
-                >Créer une nouvelle course</a
-              >
+          <!-- Activity Card -->
+          <div class="bg-white rounded-xl shadow-sm border">
+            <div class="p-6 border-b border-gray-200">
+              <h2 class="text-xl font-semibold text-gray-900">Activité récente</h2>
+            </div>
+            <div class="p-6">
+              <div th:if="${recentActivity != null and !recentActivity.isEmpty()}" class="space-y-4">
+                <div th:each="activity : ${recentActivity}" class="flex items-start">
+                  <div class="w-2 h-2 bg-color-primary rounded-full mt-2 mr-3"></div>
+                  <div>
+                    <p class="text-sm text-gray-900" th:text="${activity.description}">Description de l'activité</p>
+                    <p class="text-xs text-gray-500 mt-1" th:text="${activity.date}">Il y a 2 heures</p>
+                  </div>
+                </div>
+              </div>
+              <div th:if="${recentActivity == null or recentActivity.isEmpty()}" class="text-center py-8">
+                <svg class="w-12 h-12 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                </svg>
+                <p class="text-gray-500">Aucune activité récente</p>
+              </div>
             </div>
           </div>
         </div>

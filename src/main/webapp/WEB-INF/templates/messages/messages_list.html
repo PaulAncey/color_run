@@ -1,29 +1,60 @@
 <!-- Fragment contenant uniquement la liste des messages pour chargement AJAX -->
 <div xmlns:th="http://www.thymeleaf.org">
-  <div th:if="${#lists.isEmpty(messages)}" class="alert alert-info">
-    Aucun message pour le moment. Soyez le premier à écrire !
+  <!-- Empty State -->
+  <div th:if="${#lists.isEmpty(messages)}" class="text-center py-12">
+    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+      <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+      </svg>
+    </div>
+    <h3 class="text-lg font-medium text-gray-900 mb-2">Aucun message pour le moment</h3>
+    <p class="text-gray-600">Soyez le premier à lancer la discussion !</p>
   </div>
 
-  <div
-    th:each="message : ${messages}"
-    class="message"
-    th:style="${message.idUtilisateur == sessionUser?.idUtilisateur ? 'background-color: #f0f7ff; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;' : 'background-color: #f8f9fa; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;'}"
-  >
-    <div
-      style="
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 0.5rem;
-      "
-    >
-      <strong
-        th:text="${message.utilisateurNom != null ? message.utilisateurNom : 'Utilisateur #' + message.idUtilisateur}"
-        >Nom utilisateur</strong
-      >
-      <span th:text="${#dates.format(message.dateEnvoi, 'dd/MM/yyyy HH:mm')}"
-        >Date</span
-      >
+  <!-- Messages List -->
+  <div th:each="message : ${messages}" class="mb-4 last:mb-0">
+    <!-- Message Bubble -->
+    <div th:class="${sessionUser != null and message.idUtilisateur == sessionUser.idUtilisateur ? 'flex justify-end' : 'flex justify-start'}">
+      <div th:class="${sessionUser != null and message.idUtilisateur == sessionUser.idUtilisateur ? 
+                      'max-w-xs lg:max-w-md px-4 py-3 rounded-2xl rounded-br-md bg-gradient-to-r from-color-primary to-color-secondary text-white shadow-md' : 
+                      'max-w-xs lg:max-w-md px-4 py-3 rounded-2xl rounded-bl-md bg-white border border-gray-200 text-gray-900 shadow-sm'}">
+        
+        <!-- Message Header -->
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center">
+            <!-- User Avatar -->
+            <div th:class="${sessionUser != null and message.idUtilisateur == sessionUser.idUtilisateur ? 
+                           'w-6 h-6 bg-white/20 rounded-full flex items-center justify-center mr-2 text-xs font-semibold text-white' : 
+                           'w-6 h-6 bg-gradient-to-br from-color-primary to-color-secondary rounded-full flex items-center justify-center mr-2 text-xs font-semibold text-white'}">
+              <span th:text="${message.utilisateurNom != null ? #strings.substring(message.utilisateurNom, 0, 1).toUpperCase() : 'U'}">A</span>
+            </div>
+            
+            <!-- User Name -->
+            <span th:class="${sessionUser != null and message.idUtilisateur == sessionUser.idUtilisateur ? 'text-sm font-medium text-white/90' : 'text-sm font-medium text-gray-700'}"
+                  th:text="${message.utilisateurNom != null ? message.utilisateurNom : 'Utilisateur #' + message.idUtilisateur}">
+              Nom utilisateur
+            </span>
+          </div>
+          
+          <!-- Timestamp -->
+          <span th:class="${sessionUser != null and message.idUtilisateur == sessionUser.idUtilisateur ? 'text-xs text-white/70' : 'text-xs text-gray-500'}"
+                th:text="${#dates.format(message.dateEnvoi, 'HH:mm')}">
+            Heure
+          </span>
+        </div>
+        
+        <!-- Message Content -->
+        <p th:class="${sessionUser != null and message.idUtilisateur == sessionUser.idUtilisateur ? 'text-white leading-relaxed' : 'text-gray-900 leading-relaxed'}"
+           th:text="${message.contenu}">
+          Contenu du message
+        </p>
+        
+        <!-- Full Date (on hover) -->
+        <div th:class="${sessionUser != null and message.idUtilisateur == sessionUser.idUtilisateur ? 'text-xs text-white/60 mt-1' : 'text-xs text-gray-400 mt-1'}"
+             th:text="${#dates.format(message.dateEnvoi, 'dd/MM/yyyy')}">
+          Date complète
+        </div>
+      </div>
     </div>
-    <p th:text="${message.contenu}">Contenu du message</p>
   </div>
 </div>

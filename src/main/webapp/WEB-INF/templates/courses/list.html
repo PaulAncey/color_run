@@ -4,143 +4,276 @@
     <th:block th:replace="~{fragments/head :: head}"></th:block>
     <title>Courses - Color Run</title>
   </head>
-  <body>
+  <body class="bg-gray-50">
     <!-- Header -->
     <header th:replace="~{fragments/header :: header}"></header>
 
     <!-- Main content -->
-    <div class="container">
-      <h1>Courses disponibles</h1>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Page Header -->
+      <div class="text-center mb-12">
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <span class="bg-gradient-to-r from-color-primary via-color-secondary to-color-accent bg-clip-text text-transparent">
+            Courses disponibles
+          </span>
+        </h1>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          Découvrez toutes nos Color Runs et trouvez la course parfaite pour vous !
+        </p>
+      </div>
 
-      <!-- Filtres -->
-      <div class="card" style="margin-bottom: 2rem">
-        <div class="card-body">
-          <h3>Filtrer les courses</h3>
-          <form th:action="|${contextPath}/courses|" method="get">
-            <div style="display: flex; flex-wrap: wrap; gap: 1rem">
-              <div class="form-group" style="flex: 1; min-width: 200px">
-                <label for="ville">Ville</label>
-                <input
-                  type="text"
-                  id="ville"
-                  name="ville"
-                  th:value="${param.ville}"
-                />
-              </div>
-              <div class="form-group" style="flex: 1; min-width: 200px">
-                <label for="minDistance">Distance min (km)</label>
-                <input
-                  type="number"
-                  id="minDistance"
-                  name="minDistance"
-                  min="0"
-                  step="0.1"
-                  th:value="${param.minDistance}"
-                />
-              </div>
-              <div class="form-group" style="flex: 1; min-width: 200px">
-                <label for="maxDistance">Distance max (km)</label>
-                <input
-                  type="number"
-                  id="maxDistance"
-                  name="maxDistance"
-                  min="0"
-                  step="0.1"
-                  th:value="${param.maxDistance}"
-                />
-              </div>
-              <div class="form-group" style="flex: 1; min-width: 200px">
-                <label for="maxPrix">Prix max (€)</label>
-                <input
-                  type="number"
-                  id="maxPrix"
-                  name="maxPrix"
-                  min="0"
-                  step="0.1"
-                  th:value="${param.maxPrix}"
-                />
-              </div>
-              <div class="form-group" style="flex: 1; min-width: 200px">
-                <label for="avecObstacles">Avec obstacles</label>
-                <select id="avecObstacles" name="avecObstacles">
-                  <option value="">Tous</option>
-                  <option
-                    value="true"
-                    th:selected="${param.avecObstacles == 'true'}"
-                  >
-                    Oui
-                  </option>
-                  <option
-                    value="false"
-                    th:selected="${param.avecObstacles == 'false'}"
-                  >
-                    Non
-                  </option>
-                </select>
-              </div>
-            </div>
-            <button type="submit" class="btn">Filtrer</button>
-            <a th:href="|${contextPath}/courses|" class="btn btn-secondary">Réinitialiser</a>
-          </form>
+      <!-- Filters Section -->
+      <div class="bg-white rounded-2xl shadow-lg border p-6 mb-8">
+        <div class="flex items-center mb-6">
+          <svg class="w-6 h-6 text-color-primary mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+          </svg>
+          <h3 class="text-lg font-semibold text-gray-900">Filtrer les courses</h3>
         </div>
+        
+                <form th:action="|${contextPath}/courses|" method="get" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <!-- Ville -->
+            <div>
+              <label for="ville" class="block text-sm font-medium text-gray-700 mb-2">
+                <svg class="w-4 h-4 inline mr-1 text-color-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                </svg>
+                Ville
+              </label>
+              <input
+                type="text"
+                id="ville"
+                name="ville"
+                th:value="${param.ville}"
+                placeholder="Paris, Lyon, Marseille..."
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-color-primary focus:border-transparent transition-all duration-200"
+              />
+            </div>
+
+            <!-- Distance min -->
+            <div>
+              <label for="minDistance" class="block text-sm font-medium text-gray-700 mb-2">
+                <svg class="w-4 h-4 inline mr-1 text-color-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                </svg>
+                Distance min (km)
+              </label>
+              <input
+                type="number"
+                id="minDistance"
+                name="minDistance"
+                min="0"
+                step="0.1"
+                th:value="${param.minDistance}"
+                placeholder="5"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-color-primary focus:border-transparent transition-all duration-200"
+              />
+            </div>
+
+            <!-- Distance max -->
+            <div>
+              <label for="maxDistance" class="block text-sm font-medium text-gray-700 mb-2">
+                <svg class="w-4 h-4 inline mr-1 text-color-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/>
+                </svg>
+                Distance max (km)
+              </label>
+              <input
+                type="number"
+                id="maxDistance"
+                name="maxDistance"
+                min="0"
+                step="0.1"
+                th:value="${param.maxDistance}"
+                placeholder="10"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-color-primary focus:border-transparent transition-all duration-200"
+              />
+            </div>
+
+            <!-- Prix max -->
+            <div>
+              <label for="maxPrix" class="block text-sm font-medium text-gray-700 mb-2">
+                <svg class="w-4 h-4 inline mr-1 text-color-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+                </svg>
+                Prix max (€)
+              </label>
+              <input
+                type="number"
+                id="maxPrix"
+                name="maxPrix"
+                min="0"
+                step="0.1"
+                th:value="${param.maxPrix}"
+                placeholder="50"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-color-primary focus:border-transparent transition-all duration-200"
+              />
+            </div>
+
+            <!-- Avec obstacles -->
+            <div>
+              <label for="avecObstacles" class="block text-sm font-medium text-gray-700 mb-2">
+                <svg class="w-4 h-4 inline mr-1 text-color-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                </svg>
+                Avec obstacles
+              </label>
+              <select id="avecObstacles" name="avecObstacles" 
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-color-primary focus:border-transparent transition-all duration-200">
+                <option value="">Tous</option>
+                <option value="true" th:selected="${param.avecObstacles == 'true'}">Oui</option>
+                <option value="false" th:selected="${param.avecObstacles == 'false'}">Non</option>
+              </select>
+            </div>
+
+                      <!-- Buttons -->
+          <div class="col-span-full flex flex-col sm:flex-row gap-3">
+            <button type="submit" 
+                    class="flex-1 inline-flex items-center justify-center bg-gradient-to-r from-color-primary to-color-secondary text-white font-semibold py-3 px-6 rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+              Filtrer
+            </button>
+            <a th:href="|${contextPath}/courses|" 
+               class="flex-1 inline-flex items-center justify-center bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-lg hover:bg-gray-300 transition-all duration-300">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+              </svg>
+              Reset
+            </a>
+          </div>
+          </div>
+        </form>
       </div>
 
-      <!-- Alerte si aucune course -->
-      <div class="alert alert-info" th:if="${#lists.isEmpty(courses)}">
-        Aucune course ne correspond à vos critères de recherche.
+      <!-- Empty State -->
+      <div th:if="${#lists.isEmpty(courses)}" class="text-center py-16">
+        <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Aucune course trouvée</h3>
+        <p class="text-gray-600 mb-6">Aucune course ne correspond à vos critères de recherche.</p>
+        <a th:href="|${contextPath}/courses|" 
+           class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-color-primary to-color-secondary text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+          Voir toutes les courses
+        </a>
       </div>
 
-      <!-- Liste des courses -->
-      <div class="grid" th:unless="${#lists.isEmpty(courses)}">
-        <div class="card course-card" th:each="course : ${courses}">
-          <div class="card-body">
-            <div class="course-info">
-              <div
-                class="course-date"
-                th:text="${#dates.format(course.dateCourse, 'dd MMMM yyyy')}"
-              >
-                Date
+          <!-- Courses Grid -->
+    <div th:unless="${#lists.isEmpty(courses)}" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 mb-12">
+        <div th:each="course : ${courses}" 
+             class="bg-white rounded-xl shadow-lg border hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 overflow-hidden group">
+          
+          <!-- Course Header -->
+          <div class="relative h-48 bg-gradient-to-br from-color-primary via-color-secondary to-color-accent">
+            <div class="absolute inset-0 bg-black/20"></div>
+            <div class="relative p-6 h-full flex flex-col justify-between">
+              <!-- Date Badge -->
+              <div class="self-start">
+                <span class="px-3 py-1 bg-white/20 backdrop-blur-sm text-white text-sm font-medium rounded-full" 
+                      th:text="${#dates.format(course.dateCourse, 'dd MMM yyyy')}">Date</span>
               </div>
-              <h3 class="card-title" th:text="${course.nom}">
-                Nom de la course
-              </h3>
-              <div class="course-location" th:text="${course.ville}">Ville</div>
-              <p th:text="${#strings.abbreviate(course.description, 100)}">
-                Description
-              </p>
-              <div class="course-details">
-                <span th:text="${course.distanceKm + ' km'}">Distance</span>
-                <span th:text="${course.prix + ' €'}">Prix</span>
-                <span th:if="${course.avecObstacles}">Avec obstacles</span>
+              
+              <!-- Course Title -->
+              <div class="text-white">
+                <h3 class="text-xl font-bold mb-2 group-hover:scale-105 transition-transform duration-200" 
+                    th:text="${course.nom}">Nom de la course</h3>
+                <div class="flex items-center text-white/90">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                  </svg>
+                  <span th:text="${course.ville}">Ville</span>
+                </div>
               </div>
             </div>
-            <div class="course-actions">
-              <a th:href="${contextPath + '/courses/' + course.idCourse}" class="btn"
-                >Détails</a
-              >
+          </div>
+
+          <!-- Course Content -->
+          <div class="p-6">
+            <!-- Description -->
+            <p class="text-gray-600 mb-4 text-sm leading-relaxed" 
+               th:text="${#strings.abbreviate(course.description, 120)}">Description</p>
+            
+            <!-- Course Details -->
+            <div class="grid grid-cols-2 gap-4 mb-6">
+              <div class="flex items-center">
+                <div class="w-8 h-8 bg-color-accent/10 rounded-lg flex items-center justify-center mr-3">
+                  <svg class="w-4 h-4 text-color-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-500">Distance</p>
+                  <p class="font-semibold text-gray-900" th:text="${course.distanceKm + ' km'}">Distance</p>
+                </div>
+              </div>
+              
+              <div class="flex items-center">
+                <div class="w-8 h-8 bg-color-green/10 rounded-lg flex items-center justify-center mr-3">
+                  <svg class="w-4 h-4 text-color-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-xs text-gray-500">Prix</p>
+                  <p class="font-semibold text-gray-900" th:text="${course.prix + ' €'}">Prix</p>
+                </div>
+              </div>
             </div>
+
+            <!-- Obstacles Badge -->
+            <div th:if="${course.avecObstacles}" class="mb-4">
+              <span class="inline-flex items-center px-3 py-1 bg-color-purple/10 text-color-purple text-xs font-medium rounded-full">
+                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                </svg>
+                Avec obstacles
+              </span>
+            </div>
+
+            <!-- Action Button -->
+            <a th:href="|${contextPath}/courses/${course.idCourse}|" 
+               class="w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-color-primary to-color-secondary text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 group">
+              <span class="group-hover:mr-3 transition-all duration-200">Voir les détails</span>
+              <svg class="w-0 group-hover:w-5 h-5 ml-0 group-hover:ml-2 transition-all duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+              </svg>
+            </a>
           </div>
         </div>
       </div>
 
-      <!-- Bouton pour créer une course (si organisateur) -->
-      <div
-        th:if="${sessionUser != null and #lists.contains(sessionUserRoles, 'ORGANISATEUR')}"
-        style="margin-top: 2rem; text-align: center"
-      >
-        <a th:href="|${contextPath}/organisateur/courses/create|" class="btn"
-          >Créer une nouvelle course</a
-        >
-      </div>
+      <!-- Call to Action Buttons -->
+      <div class="text-center space-y-4">
+        <!-- Create Course (Organizer) -->
+        <div th:if="${sessionUser != null and #lists.contains(sessionUserRoles, 'ORGANISATEUR')}">
+          <a th:href="|${contextPath}/organisateur/courses/create|" 
+             class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-color-purple to-color-pink text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg>
+            Créer une nouvelle course
+          </a>
+        </div>
 
-      <!-- Bouton pour demander à devenir organisateur -->
-      <div
-        th:if="${sessionUser != null and not #lists.contains(sessionUserRoles, 'ORGANISATEUR')}"
-        style="margin-top: 2rem; text-align: center"
-      >
-        <a th:href="|${contextPath}/user/request-organizer|" class="btn btn-secondary"
-          >Devenir organisateur</a
-        >
+        <!-- Become Organizer -->
+        <div th:if="${sessionUser != null and not #lists.contains(sessionUserRoles, 'ORGANISATEUR')}">
+          <div class="bg-gradient-to-r from-color-accent/10 to-color-secondary/10 rounded-2xl p-8 max-w-2xl mx-auto">
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Vous voulez organiser des courses ?</h3>
+            <p class="text-gray-600 mb-6">Rejoignez notre équipe d'organisateurs et créez vos propres Color Runs !</p>
+            <a th:href="|${contextPath}/user/request-organizer|" 
+               class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-color-accent to-color-secondary text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+              </svg>
+              Devenir organisateur
+            </a>
+          </div>
+        </div>
       </div>
     </div>
 

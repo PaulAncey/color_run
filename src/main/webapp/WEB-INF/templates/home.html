@@ -1,129 +1,229 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="fr">
-  <head>
-    <th:block th:replace="~{fragments/head :: head}"></th:block>
-    <title>Accueil - Color Run</title>
-  </head>
-  <body>
-    <!-- Header -->
-    <header th:replace="~{fragments/header :: header}"></header>
+<head>
+  <th:block th:replace="~{fragments/head :: head}"></th:block>
+  <title>Accueil - Color Run</title>
+</head>
+<body class="bg-gray-50">
+  <!-- Header -->
+  <header th:replace="~{fragments/header :: header}"></header>
 
-    <!-- Hero Banner -->
-    <section class="hero">
-      <div class="container">
-        <h1>Bienvenue sur Color Run</h1>
-        <p>Découvrez les courses colorées les plus fun de France !</p>
-        <div class="hero-buttons">
-          <a th:href="|${contextPath}/courses|" class="btn">Voir les courses</a>
-          <a
-            th:if="${sessionUser == null}"
-            th:href="|${contextPath}/register|"
-            class="btn btn-secondary"
-            >S'inscrire</a
-          >
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden bg-gradient-to-br from-color-primary via-color-secondary to-color-accent">
+    <div class="absolute inset-0 bg-black/20"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+      <div class="text-center">
+        <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+          Bienvenue sur 
+          <span class="block bg-gradient-to-r from-color-accent to-color-green bg-clip-text text-transparent">
+            Color Run
+          </span>
+        </h1>
+        <p class="text-xl md:text-2xl text-white/90 mb-12 max-w-3xl mx-auto">
+          Découvrez les courses colorées les plus fun de France ! 
+          Courez, amusez-vous et créez des souvenirs inoubliables.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a th:href="|${contextPath}/courses|" 
+             class="inline-flex items-center px-8 py-4 bg-white text-color-primary font-semibold text-lg rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
+            </svg>
+            Voir les courses
+          </a>
+          <a th:if="${sessionUser == null}"
+             th:href="|${contextPath}/register|" 
+             class="inline-flex items-center px-8 py-4 bg-transparent border-2 border-white text-white font-semibold text-lg rounded-xl hover:bg-white hover:text-color-primary transition-all duration-300">
+            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+            </svg>
+            S'inscrire gratuitement
+          </a>
         </div>
       </div>
-    </section>
+    </div>
+    
+    <!-- Floating elements -->
+    <div class="absolute top-20 left-10 w-20 h-20 bg-color-pink/30 rounded-full animate-bounce"></div>
+    <div class="absolute top-40 right-20 w-16 h-16 bg-color-blue/30 rounded-full animate-bounce delay-1000"></div>
+    <div class="absolute bottom-32 left-1/4 w-12 h-12 bg-color-green/30 rounded-full animate-bounce delay-500"></div>
+    <div class="absolute bottom-20 right-1/3 w-14 h-14 bg-color-accent/30 rounded-full animate-bounce delay-1500"></div>
+  </section>
 
-    <!-- Courses à venir -->
-    <section>
-      <div class="container">
-        <h2>Prochaines courses</h2>
-
-        <div class="alert alert-info" th:if="${upcomingCourses.empty}">
-          Aucune course à venir pour le moment.
+  <!-- Features Section -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          Pourquoi choisir Color Run ?
+        </h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          Une expérience unique qui transforme votre course en festival de couleurs et de joie
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Feature 1 -->
+        <div class="text-center group">
+          <div class="w-20 h-20 bg-gradient-to-br from-color-primary to-color-secondary rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Énergie pure</h3>
+          <p class="text-gray-600">
+            Vivez une expérience énergisante où sport et plaisir se rencontrent dans une explosion de couleurs.
+          </p>
         </div>
 
-        <div class="grid" th:unless="${upcomingCourses.empty}">
-          <div class="card course-card" th:each="course : ${upcomingCourses}">
-            <div class="card-body">
-              <div class="course-info">
-                <div
-                  class="course-date"
-                  th:text="${#dates.format(course.dateCourse, 'dd MMMM yyyy')}"
-                >
-                  Date
-                </div>
-                <h3 class="card-title" th:text="${course.nom}">
-                  Nom de la course
-                </h3>
-                <div class="course-location" th:text="${course.ville}">
-                  Ville
-                </div>
-                <div class="course-details">
-                  <span th:text="${course.distanceKm + ' km'}">Distance</span>
-                  <span th:text="${course.prix + ' €'}">Prix</span>
-                </div>
+        <!-- Feature 2 -->
+        <div class="text-center group">
+          <div class="w-20 h-20 bg-gradient-to-br from-color-accent to-color-green rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Communauté</h3>
+          <p class="text-gray-600">
+            Rejoignez une communauté bienveillante de coureurs passionnés par le fun et le partage.
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="text-center group">
+          <div class="w-20 h-20 bg-gradient-to-br from-color-pink to-color-purple rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Bonne cause</h3>
+          <p class="text-gray-600">
+            Participez à des courses qui soutiennent des causes importantes et faites la différence.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Upcoming Courses Section -->
+  <section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          Courses à venir
+        </h2>
+        <p class="text-xl text-gray-600">
+          Découvrez les prochaines Color Runs près de chez vous
+        </p>
+      </div>
+
+      <!-- Courses Grid -->
+      <div th:if="${upcomingCourses != null and !upcomingCourses.isEmpty()}" 
+           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div th:each="course : ${upcomingCourses}" 
+             class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+          <div class="relative h-48 bg-gradient-to-br from-color-primary via-color-secondary to-color-accent">
+            <div class="absolute inset-0 bg-black/20"></div>
+            <div class="absolute bottom-4 left-4 text-white">
+              <h3 class="text-xl font-bold mb-1" th:text="${course.nom}">Nom de la course</h3>
+              <p class="text-sm opacity-90" th:text="${course.ville}">Ville</p>
+            </div>
+            <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1">
+              <span class="text-white text-sm font-medium" th:text="${course.prix + '€'}">Prix</span>
+            </div>
+          </div>
+          
+          <div class="p-6">
+            <div class="flex items-center text-gray-600 text-sm mb-3">
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+              <span th:text="${#dates.format(course.dateCourse, 'dd MMMM yyyy')}">Date</span>
+            </div>
+            
+            <p class="text-gray-700 mb-4 line-clamp-3" th:text="${course.description}">
+              Description de la course
+            </p>
+            
+            <div class="flex items-center justify-between">
+              <div class="flex items-center text-sm text-gray-600">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                </svg>
+                <span th:text="${course.distanceKm + ' km'}">Distance</span>
               </div>
-              <div class="course-actions">
-                <a th:href="${contextPath + '/courses/' + course.idCourse}" class="btn"
-                  >Détails</a
-                >
-              </div>
+              <a th:href="|${contextPath}/courses/${course.idCourse}|" 
+                 class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-color-primary to-color-secondary text-white text-sm font-medium rounded-lg hover:shadow-lg transition-all duration-300 group-hover:scale-105">
+                Voir détails
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </a>
             </div>
           </div>
         </div>
+      </div>
 
-        <div style="text-align: center; margin-top: 1.5rem">
-          <a th:href="|${contextPath}/courses|" class="btn">Voir toutes les courses</a>
+      <!-- No courses message -->
+      <div th:if="${upcomingCourses == null or upcomingCourses.isEmpty()}" 
+           class="text-center py-12">
+        <div class="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
         </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Aucune course à venir</h3>
+        <p class="text-gray-600 mb-6">De nouvelles courses seront bientôt ajoutées !</p>
+        <a th:href="|${contextPath}/courses|" 
+           class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-color-primary to-color-secondary text-white font-medium rounded-lg hover:shadow-lg transition-all duration-300">
+          Voir toutes les courses
+        </a>
       </div>
-    </section>
 
-    <!-- About -->
-    <section>
-      <div class="container">
-        <h2>Qu'est-ce qu'une Color Run ?</h2>
-        <div style="display: flex; gap: 2rem; flex-wrap: wrap">
-          <div style="flex: 1; min-width: 300px">
-            <p>
-              Les Color Runs sont des courses festives et colorées où les
-              participants sont aspergés de poudre colorée à différentes étapes
-              du parcours. Il ne s'agit pas d'une compétition, mais d'un moment
-              de partage et de plaisir accessible à tous.
-            </p>
-            <p>
-              Que vous soyez coureur expérimenté ou débutant, seul, en famille
-              ou entre amis, les Color Runs sont ouvertes à tous ceux qui
-              souhaitent passer un bon moment tout en faisant de l'exercice.
-            </p>
-          </div>
-          <div style="flex: 1; min-width: 300px">
-            <img
-              src="https://via.placeholder.com/500x300"
-              alt="Color Run"
-              style="width: 100%; border-radius: 5px"
-            />
-          </div>
-        </div>
+      <!-- View all link -->
+      <div th:if="${upcomingCourses != null and !upcomingCourses.isEmpty()}" 
+           class="text-center mt-12">
+        <a th:href="|${contextPath}/courses|" 
+           class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-color-primary to-color-secondary text-white font-semibold text-lg rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+          Voir toutes les courses
+          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </a>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- CTA -->
-    <section
-      style="
-        background-color: #ff5a5f;
-        color: white;
-        padding: 3rem 0;
-        margin-top: 3rem;
-      "
-    >
-      <div class="container" style="text-align: center">
-        <h2>Prêt à vivre l'expérience Color Run ?</h2>
-        <p>
-          Inscrivez-vous dès maintenant à l'une de nos courses et préparez-vous
-          à voir la vie en couleurs !
-        </p>
-        <a
-          th:href="|${contextPath}/courses|"
-          class="btn"
-          style="background-color: white; color: #ff5a5f; margin-top: 1rem"
-          >Trouver une course</a
-        >
+  <!-- CTA Section -->
+  <section class="py-20 bg-gradient-to-r from-color-purple via-color-pink to-color-primary">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
+        Prêt à vivre l'expérience Color Run ?
+      </h2>
+      <p class="text-xl text-white/90 mb-8">
+        Rejoignez des milliers de participants pour une course inoubliable !
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a th:if="${sessionUser == null}"
+           th:href="|${contextPath}/register|" 
+           class="inline-flex items-center px-8 py-4 bg-white text-color-primary font-semibold text-lg rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+          <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+          </svg>
+          Créer mon compte
+        </a>
+        <a th:href="|${contextPath}/courses|" 
+           class="inline-flex items-center px-8 py-4 bg-transparent border-2 border-white text-white font-semibold text-lg rounded-xl hover:bg-white hover:text-color-primary transition-all duration-300">
+          <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          Explorer les courses
+        </a>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Footer -->
-    <footer th:replace="~{fragments/footer :: footer}"></footer>
-  </body>
+  <!-- Footer -->
+  <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
 </html>
