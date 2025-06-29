@@ -92,7 +92,7 @@
 
           <!-- Lien pour demander à être organisateur -->
           <div
-            th:if="${userRoles == null or not #lists.contains(userRoles, 'ORGANISATEUR')}"
+            th:if="${userRoles == null or (userRoles != null and not #lists.contains(userRoles, 'ORGANISATEUR'))}"
             style="margin-top: 1rem"
           >
             <a
@@ -105,7 +105,7 @@
 
           <!-- Message si demande en attente -->
           <div
-            th:if="${userRoles == null or not #lists.contains(userRoles, 'ORGANISATEUR')}"
+            th:if="${userRoles == null or (userRoles != null and not #lists.contains(userRoles, 'ORGANISATEUR'))}"
             style="margin-top: 1rem"
           >
             <p th:if="${!canRequestOrganizerRole}" class="alert alert-info">

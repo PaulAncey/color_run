@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+  <head>
+    <th:block th:replace="~{fragments/head :: head}"></th:block>
+    <title>Participants - Color Run</title>
+  </head>
+  <body class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <!-- Main content -->
+    <div class="py-8 px-4">
+      <div class="max-w-7xl mx-auto">
+        
+        <!-- Header Section -->
+        <div class="mb-8">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center">
+              <div class="w-12 h-12 bg-gradient-to-br from-color-pink to-color-accent rounded-2xl flex items-center justify-center mr-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+                </svg>
+              </div>
+              <div>
+                <h1 class="text-3xl font-bold text-gray-900">Participants à la course</h1>
+                <p class="text-gray-600" th:text="${course.nom}">Nom de la course</p>
+              </div>
+            </div>
+            
+            <!-- Actions principales -->
+            <div class="flex gap-3">
+              <a th:href="@{'/organisateur/courses/edit/' + ${course.idCourse}}"
+                 class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 font-medium rounded-xl border border-blue-200 hover:bg-blue-200 transition-all duration-300">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                Modifier la course
+              </a>
+              <button onclick="exportParticipants()"
+                      class="inline-flex items-center px-4 py-2 bg-green-100 text-green-700 font-medium rounded-xl border border-green-200 hover:bg-green-200 transition-all duration-300">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                Exporter
+              </button>
+            </div>
+          </div>
+
+          <!-- Alert -->
+          <div th:if="${param.success}" class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-center">
+            <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <p class="text-green-700 font-medium" th:text="${param.success}">Succès</p>
+          </div>
+
+          <div th:if="${param.error}" class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center">
+            <svg class="w-5 h-5 text-red-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <p class="text-red-700 font-medium" th:text="${param.error}">Erreur</p>
+          </div>
+        </div>
+
+        <!-- Statistiques -->
+        <div class="grid md:grid-cols-4 gap-6 mb-8">
+          <div class="bg-white rounded-2xl p-6 border shadow-sm">
+            <div class="flex items-center">
+              <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="text-2xl font-bold text-gray-900" th:text="${nbParticipants != null ? nbParticipants : 0}">0</div>
+                <div class="text-sm text-gray-600">Participants inscrits</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl p-6 border shadow-sm">
+            <div class="flex items-center">
+              <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mr-4">
+                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="text-2xl font-bold text-gray-900" th:text="${course.nbMaxParticipants}">0</div>
+                <div class="text-sm text-gray-600">Places disponibles</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl p-6 border shadow-sm">
+            <div class="flex items-center">
+              <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mr-4">
+                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+                </svg>
+              </div>
+              <div>
+                <div class="text-2xl font-bold text-gray-900" th:text="${#numbers.formatDecimal((nbParticipants != null ? nbParticipants : 0) * course.prix, 0, 2)} + '€'">0€</div>
+                <div class="text-sm text-gray-600">Revenus potentiels</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl p-6 border shadow-sm">
+            <div class="flex items-center">
+              <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center mr-4">
+                <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="text-2xl font-bold text-gray-900" th:text="${#numbers.formatDecimal(((nbParticipants != null ? nbParticipants : 0.0) / course.nbMaxParticipants) * 100, 0, 1)} + '%'">0%</div>
+                <div class="text-sm text-gray-600">Taux de remplissage</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informations de la course -->
+        <div class="bg-white rounded-2xl shadow-sm border p-6 mb-8">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Détails de la course
+          </h3>
+          <div class="grid md:grid-cols-3 gap-6">
+            <div>
+              <label class="text-sm font-medium text-gray-700">Date et heure</label>
+              <p class="text-gray-900 font-medium" th:text="${#dates.format(course.dateCourse, 'dd/MM/yyyy')} + ' à ' + ${course.heureDebut}">Date</p>
+            </div>
+            <div>
+              <label class="text-sm font-medium text-gray-700">Lieu</label>
+              <p class="text-gray-900 font-medium" th:text="${course.ville} + ' - ' + ${course.adresse}">Lieu</p>
+            </div>
+            <div>
+              <label class="text-sm font-medium text-gray-700">Distance et prix</label>
+              <p class="text-gray-900 font-medium" th:text="${course.distanceKm} + ' km - ' + ${course.prix} + '€'">Distance et prix</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Liste des participants -->
+        <div class="bg-white rounded-2xl shadow-sm border">
+          <div class="p-6 border-b border-gray-100">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                Liste des participants
+              </h3>
+              <div class="flex items-center gap-4">
+                <div class="relative">
+                  <input type="text" id="searchParticipant" placeholder="Rechercher un participant..."
+                         class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-color-primary focus:border-transparent text-sm">
+                  <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Aucun participant -->
+          <div th:if="${participations == null or #lists.isEmpty(participations)}" class="text-center py-12">
+            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Aucun participant inscrit</h3>
+            <p class="text-gray-600">Les inscriptions n'ont pas encore commencé ou personne ne s'est inscrit.</p>
+          </div>
+
+          <!-- Liste des participants -->
+          <div th:if="${participations != null and not #lists.isEmpty(participations)}" class="overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Participant</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Inscription</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dossard</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr th:each="participation : ${participations}" th:class="'hover:bg-gray-50 transition-colors duration-200'">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="flex items-center">
+                        <div class="w-10 h-10 bg-gradient-to-br from-color-primary to-color-secondary rounded-full flex items-center justify-center mr-3">
+                          <span class="text-white font-semibold text-sm" th:text="${#strings.substring(participation.utilisateurNom, 0, 1)} + ${#strings.substring(participation.utilisateurPrenom, 0, 1)}">AB</span>
+                        </div>
+                        <div>
+                          <div class="text-sm font-medium text-gray-900" th:text="${participation.utilisateurPrenom} + ' ' + ${participation.utilisateurNom}">Nom Prénom</div>
+                          <div class="text-sm text-gray-500">Participant</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900" th:text="${participation.utilisateurEmail}">email@example.com</div>
+                      <div class="text-sm text-gray-500">Email</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900" th:text="${#dates.format(participation.dateInscription, 'dd/MM/yyyy')}">01/01/2024</div>
+                      <div class="text-sm text-gray-500" th:text="'à ' + ${#dates.format(participation.dateInscription, 'HH:mm')}">à 10:30</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div th:if="${participation.numeroDossard != null}" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        <span th:text="'#' + ${participation.numeroDossard}">Dossard</span>
+                      </div>
+                      <div th:if="${participation.numeroDossard == null}" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                        Non attribué
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div class="flex gap-2">
+                        <a th:href="@{'/participations/bib/' + ${participation.idParticipation}}" target="_blank"
+                           class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors duration-200 text-xs">
+                          <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                          </svg>
+                          Dossard PDF
+                        </a>
+                        <button onclick="sendMessageToParticipant('${participation.idUtilisateur}')"
+                                class="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors duration-200 text-xs">
+                          <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                          </svg>
+                          Message
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions globales -->
+        <div th:if="${participations != null and not #lists.isEmpty(participations)}" class="mt-8 bg-white rounded-2xl shadow-sm border p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+            Actions groupées
+          </h3>
+          <div class="flex flex-wrap gap-4">
+            <button onclick="sendMessageToAllParticipants()"
+                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-color-primary to-color-secondary hover:from-color-primary/90 hover:to-color-secondary/90 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+              </svg>
+              Envoyer un message à tous
+            </button>
+            <button onclick="generateAllBibs()"
+                    class="inline-flex items-center px-6 py-3 bg-purple-100 text-purple-700 font-semibold rounded-xl border border-purple-200 hover:bg-purple-200 transition-all duration-300">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H9.5a2 2 0 01-2-2V5a2 2 0 00-2-2H3"/>
+              </svg>
+              Générer tous les dossards
+            </button>
+            <a th:href="@{'/courses/' + ${course.idCourse}}"
+               class="inline-flex items-center px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-xl border border-gray-200 hover:bg-gray-200 transition-all duration-300">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+              Voir la page publique
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- JavaScript pour les fonctionnalités -->
+    <script>
+      function exportParticipants() {
+        // Fonction pour exporter la liste des participants
+        alert('Fonctionnalité d\'export en cours de développement');
+      }
+
+      function sendMessageToParticipant(userId) {
+        // Fonction pour envoyer un message à un participant spécifique
+        alert('Fonctionnalité de message individuel en cours de développement');
+      }
+
+      function sendMessageToAllParticipants() {
+        // Fonction pour envoyer un message à tous les participants
+        alert('Fonctionnalité de message groupé en cours de développement');
+      }
+
+      function generateAllBibs() {
+        // Fonction pour générer tous les dossards
+        alert('Fonctionnalité de génération groupée en cours de développement');
+      }
+
+      // Fonction de recherche
+      document.getElementById('searchParticipant')?.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('tbody tr');
+        
+        rows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          if (text.includes(searchTerm)) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
+    </script>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+  </body>
+</html> 

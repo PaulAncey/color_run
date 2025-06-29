@@ -2,6 +2,7 @@ package fr.esgi.color_run.util;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.WebApplicationTemplateResolver;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
@@ -55,8 +56,8 @@ public class ThymeleafUtil {
             throw new IllegalStateException("ThymeleafUtil n'est pas initialisé. Appelez init() d'abord.");
         }
 
-        // Créer le contexte Thymeleaf
-        Context context = new Context();
+        // Créer le contexte Web Thymeleaf (nécessaire pour les expressions @{...})
+        WebContext context = new WebContext(jakartaServletWebApplication.buildExchange(request, response));
 
         // Ajouter les variables
         if (variables != null) {

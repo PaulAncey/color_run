@@ -3,75 +3,232 @@
 <head>
   <th:block th:replace="~{fragments/head :: head}"></th:block>
   <title th:text="${pageTitle != null ? pageTitle : 'Connexion - Color Run'}">Connexion - Color Run</title>
+  <style>
+    .color-splash {
+      position: absolute;
+      border-radius: 50%;
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    .color-splash:nth-child(1) {
+      animation-delay: 0s;
+    }
+    
+    .color-splash:nth-child(2) {
+      animation-delay: 1s;
+    }
+    
+    .color-splash:nth-child(3) {
+      animation-delay: 2s;
+    }
+    
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px) scale(1);
+        opacity: 0.7;
+      }
+      50% {
+        transform: translateY(-10px) scale(1.1);
+        opacity: 1;
+      }
+    }
+    
+    .login-form {
+      backdrop-filter: blur(10px);
+    }
+    
+    .input-glow:focus {
+      box-shadow: 0 0 20px rgba(255, 90, 95, 0.3);
+    }
+    
+    .btn-gradient {
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-gradient::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+      transition: all 0.4s ease;
+      z-index: -1;
+    }
+    
+    .btn-gradient:hover::before {
+      left: 0;
+    }
+    
+    .logo-container {
+      animation: logoIntro 1s ease-out;
+    }
+    
+    @keyframes logoIntro {
+      from {
+        transform: scale(0.8) rotate(-10deg);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+    
+    .form-slide-in {
+      animation: slideIn 0.8s ease-out 0.3s both;
+    }
+    
+    @keyframes slideIn {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  </style>
 </head>
-<body class="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-<div class="w-full max-w-md">
-  <!-- Logo -->
-  <div class="text-center mb-8">
-    <div class="inline-block p-6 bg-white rounded-3xl shadow-lg">
-      <div class="w-24 h-24 mx-auto bg-gradient-to-br from-color-primary via-color-secondary to-color-accent rounded-2xl flex items-center justify-center relative overflow-hidden">
-        <!-- Logo coloré avec texte COLOR RUN -->
-        <div class="text-center">
-          <div class="text-white font-bold text-lg leading-tight">
-            COLOR<br>RUN
+<body class="min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
+  
+  <!-- Background avec motif -->
+  <div class="fixed inset-0 z-0">
+    <div class="absolute inset-0 bg-gradient-to-br from-gray-50 via-blue-50 to-pink-50"></div>
+    <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-r from-color-primary/10 to-color-secondary/10 rounded-full filter blur-3xl"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-r from-color-secondary/10 to-color-accent/10 rounded-full filter blur-3xl"></div>
+  </div>
+
+  <div class="w-full max-w-md relative z-10">
+    <!-- Logo avec animation -->
+    <div class="text-center mb-8 logo-container">
+      <div class="inline-block p-8 bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-white/20">
+        <div class="w-28 h-28 mx-auto bg-gradient-to-br from-color-primary via-color-secondary to-color-accent rounded-2xl flex items-center justify-center relative overflow-hidden shadow-lg">
+          <!-- Logo coloré avec texte COLOR RUN -->
+          <div class="text-center relative z-10">
+            <div class="text-white font-bold text-xl leading-tight drop-shadow-lg">
+              COLOR<br>RUN
+            </div>
           </div>
+          
+          <!-- Splashes de couleur animées -->
+          <div class="color-splash w-4 h-4 bg-yellow-400 top-3 right-3"></div>
+          <div class="color-splash w-3 h-3 bg-blue-400 bottom-3 left-3"></div>
+          <div class="color-splash w-2 h-2 bg-green-400 top-1/2 left-2"></div>
+          <div class="color-splash w-2.5 h-2.5 bg-purple-400 top-6 left-1/2"></div>
+          
+          <!-- Effet de brillance -->
+          <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
         </div>
-        <!-- Splashes de couleur pour l'effet -->
-        <div class="absolute top-2 right-2 w-3 h-3 bg-color-pink rounded-full opacity-80"></div>
-        <div class="absolute bottom-2 left-2 w-2 h-2 bg-color-blue rounded-full opacity-60"></div>
-        <div class="absolute top-1/2 left-1 w-1.5 h-1.5 bg-color-green rounded-full opacity-70"></div>
+      </div>
+      
+      <!-- Titre avec animation -->
+      <div class="mt-6">
+        <h1 class="text-3xl font-bold gradient-text mb-2">Bienvenue !</h1>
+        <p class="text-gray-600 font-medium">Connectez-vous pour rejoindre l'aventure</p>
       </div>
     </div>
-  </div>
 
-  <!-- Formulaire de connexion -->
-  <div class="bg-white rounded-2xl shadow-lg p-8">
-    <!-- Message d'erreur -->
-    <div th:if="${error}" class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-      <p class="text-red-600 text-sm" th:text="${error}"></p>
+    <!-- Formulaire de connexion avec effet glassmorphisme -->
+    <div class="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl border border-white/20 p-8 login-form form-slide-in">
+      <!-- Message d'erreur -->
+      <div th:if="${error}" class="mb-6 p-4 bg-red-50/80 backdrop-blur border border-red-200 rounded-xl flex items-center">
+        <svg class="w-5 h-5 text-red-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <p class="text-red-700 font-medium" th:text="${error}">Erreur de connexion</p>
+      </div>
+
+      <form method="post" th:action="|${contextPath}/login|" class="space-y-6">
+        <!-- Champ email -->
+        <div class="space-y-2">
+          <label for="email" class="block text-sm font-semibold text-gray-700 ml-1">
+            <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
+            </svg>
+            Adresse email
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="votre.email@exemple.com"
+            required
+            class="w-full px-4 py-4 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:bg-white focus:border-color-primary focus:outline-none transition-all duration-300 input-glow"
+          />
+        </div>
+
+        <!-- Champ mot de passe -->
+        <div class="space-y-2">
+          <label for="password" class="block text-sm font-semibold text-gray-700 ml-1">
+            <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+            Mot de passe
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="••••••••"
+            required
+            class="w-full px-4 py-4 bg-gray-50 border-2 border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:bg-white focus:border-color-primary focus:outline-none transition-all duration-300 input-glow"
+          />
+        </div>
+
+        <!-- Options -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <input id="remember" name="remember" type="checkbox" class="h-4 w-4 text-color-primary focus:ring-color-primary border-gray-300 rounded">
+            <label for="remember" class="ml-2 block text-sm text-gray-700 font-medium">
+              Se souvenir de moi
+            </label>
+          </div>
+          
+          <a th:href="|${contextPath}/forgot-password|" class="text-sm text-color-primary hover:text-color-secondary transition-colors duration-300 font-semibold">
+            Mot de passe oublié ?
+          </a>
+        </div>
+
+        <!-- Bouton de connexion -->
+        <button
+          type="submit"
+          class="w-full btn-gradient text-white font-bold py-4 rounded-xl transition-all duration-300 hover:shadow-xl hover:transform hover:-translate-y-1 relative z-10"
+        >
+          <span class="flex items-center justify-center text-black">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+            </svg>
+            Se connecter
+          </span>
+        </button>
+      </form>
+
+      <!-- Séparateur -->
+      <div class="mt-8 pt-6 border-t border-gray-200">
+        <div class="text-center">
+          <p class="text-gray-600 mb-4">Pas encore de compte ?</p>
+          <a th:href="|${contextPath}/register|" 
+             class="inline-flex items-center px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl border border-gray-200 transition-all duration-300 hover:shadow-md hover:transform hover:-translate-y-0.5">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+            </svg>
+            Créer un compte
+          </a>
+        </div>
+      </div>
     </div>
 
-    <form method="post" th:action="|${contextPath}/login|" class="space-y-6">
-      <!-- Champ email -->
-      <div>
-        <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="email"
-                required
-                class="w-full px-4 py-4 bg-gray-100 border-0 rounded-lg text-gray-700 placeholder-gray-500 focus:bg-white focus:ring-2 focus:ring-color-primary focus:outline-none transition-all duration-300"
-        />
-      </div>
-
-      <!-- Champ mot de passe -->
-      <div>
-        <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="mdp"
-                required
-                class="w-full px-4 py-4 bg-gray-100 border-0 rounded-lg text-gray-700 placeholder-gray-500 focus:bg-white focus:ring-2 focus:ring-color-primary focus:outline-none transition-all duration-300"
-        />
-      </div>
-
-      <!-- Lien mot de passe oublié -->
-      <div class="text-left">
-        <a href="/forgot-password" class="text-sm text-gray-500 hover:text-color-primary transition-colors duration-300">
-          Mot de passe oublié ?
-        </a>
-      </div>
-
-      <!-- Bouton de connexion -->
-      <button
-              type="submit"
-              class="w-full bg-gray-300 hover:bg-gray-400 text-gray-700 font-medium py-4 rounded-lg transition-all duration-300 hover:shadow-md"
-      >
-        connexion
-      </button>
-    </form>
+    <!-- Footer -->
+    <div class="text-center mt-8">
+      <p class="text-gray-500 text-sm">
+        © 2025 Color Run - Course colorée pour tous
+      </p>
+    </div>
   </div>
-</div>
 </body>
 </html>
