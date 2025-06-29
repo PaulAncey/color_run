@@ -3,227 +3,444 @@
 <head>
   <th:block th:replace="~{fragments/head :: head}"></th:block>
   <title>Accueil - Color Run</title>
+  <style>
+    .text-gradient {
+      background: linear-gradient(135deg, #ff5a5f 0%, #ff6b35 50%, #4ecdc4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease-out;
+    }
+    
+    .animate-on-scroll.animated {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-5px);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(255, 90, 95, 0.3);
+    }
+    
+    .btn-secondary {
+      border: 2px solid var(--color-primary);
+      color: var(--color-primary);
+      background: transparent;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      background: var(--color-primary);
+      color: white;
+      transform: translateY(-2px);
+    }
+  </style>
 </head>
 <body class="bg-gray-50">
   <!-- Header -->
   <header th:replace="~{fragments/header :: header}"></header>
 
   <!-- Hero Section -->
-  <section class="relative overflow-hidden bg-gradient-to-br from-color-primary via-color-secondary to-color-accent">
+  <section class="relative bg-gradient-to-br from-color-primary via-color-secondary to-color-accent min-h-screen flex items-center">
     <div class="absolute inset-0 bg-black/20"></div>
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
-      <div class="text-center">
-        <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-          Bienvenue sur 
-          <span class="block bg-gradient-to-r from-color-accent to-color-green bg-clip-text text-transparent">
-            Color Run
-          </span>
-        </h1>
-        <p class="text-xl md:text-2xl text-white/90 mb-12 max-w-3xl mx-auto">
-          Découvrez les courses colorées les plus fun de France ! 
-          Courez, amusez-vous et créez des souvenirs inoubliables.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <a th:href="|${contextPath}/courses|" 
-             class="inline-flex items-center px-8 py-4 bg-white text-color-primary font-semibold text-lg rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
-            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
-            </svg>
-            Voir les courses
-          </a>
-          <a th:if="${sessionUser == null}"
-             th:href="|${contextPath}/register|" 
-             class="inline-flex items-center px-8 py-4 bg-transparent border-2 border-white text-white font-semibold text-lg rounded-xl hover:bg-white hover:text-color-primary transition-all duration-300">
-            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
-            </svg>
-            S'inscrire gratuitement
-          </a>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+      <p class="text-white/90 text-lg mb-4 animate-on-scroll">
+        Venez vivre l'expérience unique de la Color Run dans votre ville !
+      </p>
+      
+      <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight animate-on-scroll">
+        Rejoignez une explosion de couleurs, 
+        <br/>
+        de fun et d'énergie !
+      </h1>
+      
+      <p class="text-xl text-white/90 mb-12 max-w-4xl mx-auto leading-relaxed animate-on-scroll">
+        La Color Run, c'est bien plus qu'une course : c'est une fête où chaque kilomètre devient un arc-en-ciel de bonheur. Que vous soyez coureur aguerri ou amateur de bonne humeur, vous êtes les bienvenus !
+      </p>
+      
+      <div class="flex flex-col sm:flex-row gap-4 justify-center animate-on-scroll">
+        <a th:href="|${contextPath}/courses|" 
+           class="inline-flex items-center px-8 py-4 btn-primary text-white font-semibold text-lg rounded-xl shadow-lg">
+          Découvrir les courses
+        </a>
+        <a th:if="${sessionUser == null}"
+           th:href="|${contextPath}/register|" 
+           class="inline-flex items-center px-8 py-4 btn-secondary font-semibold text-lg rounded-xl">
+          Inscrivez-vous maintenant
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Concept Section -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 animate-on-scroll">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+          Découvrez le concept de la Color Run
+        </h2>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="animate-on-scroll">
+          <div class="w-full h-64 bg-gradient-to-br from-color-primary via-color-secondary to-color-accent rounded-2xl flex items-center justify-center">
+            <div class="text-white text-center">
+              <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+              </svg>
+              <p class="text-lg font-semibold">Image du concept</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="animate-on-scroll">
+          <p class="text-lg text-gray-700 leading-relaxed mb-6">
+            La Color Run, c'est une course festive et accessible à tous, où la priorité n'est pas le chrono mais le plaisir ! Participants et bénévoles sont invités à courir, marcher ou danser ensemble à travers un parcours ponctué de stations colorées.
+          </p>
+          <p class="text-lg text-gray-700 leading-relaxed">
+            À chaque étape de votre parcours, vous êtes aspergés de poudres colorées, créant ainsi des nuages de couleurs et donnant naissance à une vraie fête colorée !
+          </p>
         </div>
       </div>
     </div>
-    
-    <!-- Floating elements -->
-    <div class="absolute top-20 left-10 w-20 h-20 bg-color-pink/30 rounded-full animate-bounce"></div>
-    <div class="absolute top-40 right-20 w-16 h-16 bg-color-blue/30 rounded-full animate-bounce delay-1000"></div>
-    <div class="absolute bottom-32 left-1/4 w-12 h-12 bg-color-green/30 rounded-full animate-bounce delay-500"></div>
-    <div class="absolute bottom-20 right-1/3 w-14 h-14 bg-color-accent/30 rounded-full animate-bounce delay-1500"></div>
   </section>
 
-  <!-- Features Section -->
-  <section class="py-20 bg-white">
+  <!-- Why Participate Section -->
+  <section class="py-20 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-16">
+      <div class="text-center mb-16 animate-on-scroll">
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-          Pourquoi choisir Color Run ?
+          Pourquoi participer ?
         </h2>
-        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-          Une expérience unique qui transforme votre course en festival de couleurs et de joie
-        </p>
       </div>
       
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <!-- Feature 1 -->
-        <div class="text-center group">
-          <div class="w-20 h-20 bg-gradient-to-br from-color-primary to-color-secondary rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="text-center group animate-on-scroll card-hover">
+          <div class="w-24 h-24 bg-gradient-to-br from-color-primary to-color-secondary rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
             </svg>
           </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">Énergie pure</h3>
-          <p class="text-gray-600">
-            Vivez une expérience énergisante où sport et plaisir se rencontrent dans une explosion de couleurs.
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Une ambiance fun et conviviale</h3>
+          <p class="text-gray-600 leading-relaxed">
+            Vivez un moment unique dans une atmosphère festive et bienveillante.
           </p>
         </div>
 
         <!-- Feature 2 -->
-        <div class="text-center group">
-          <div class="w-20 h-20 bg-gradient-to-br from-color-accent to-color-green rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="text-center group animate-on-scroll card-hover">
+          <div class="w-24 h-24 bg-gradient-to-br from-color-accent to-color-green rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
             </svg>
           </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">Communauté</h3>
-          <p class="text-gray-600">
-            Rejoignez une communauté bienveillante de coureurs passionnés par le fun et le partage.
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Aucune pression, juste du plaisir</h3>
+          <p class="text-gray-600 leading-relaxed">
+            Pas de chronométrage, pas de compétition. L'objectif est de s'amuser !
           </p>
         </div>
 
         <!-- Feature 3 -->
-        <div class="text-center group">
-          <div class="w-20 h-20 bg-gradient-to-br from-color-pink to-color-purple rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="text-center group animate-on-scroll card-hover">
+          <div class="w-24 h-24 bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
             </svg>
           </div>
-          <h3 class="text-xl font-semibold text-gray-900 mb-4">Bonne cause</h3>
-          <p class="text-gray-600">
-            Participez à des courses qui soutiennent des causes importantes et faites la différence.
+          <h3 class="text-xl font-semibold text-gray-900 mb-4">Accessible à tous les âges et niveaux</h3>
+          <p class="text-gray-600 leading-relaxed">
+            Enfants, adultes, familles : tout le monde peut participer !
           </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Upcoming Courses Section -->
-  <section class="py-20 bg-gray-50">
+  <!-- Upcoming Events Section -->
+  <section class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-16">
+      <div class="text-center mb-16 animate-on-scroll">
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-          Courses à venir
+          Nos prochaines étapes colorées
         </h2>
         <p class="text-xl text-gray-600">
-          Découvrez les prochaines Color Runs près de chez vous
+          La Color Run voyage dans toute la France ! Voici les villes de nos prochains passages avec dates prochainement :
         </p>
       </div>
 
-      <!-- Courses Grid -->
+      <!-- Events Grid -->
       <div th:if="${upcomingCourses != null and !upcomingCourses.isEmpty()}" 
            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <div th:each="course : ${upcomingCourses}" 
-             class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
-          <div class="relative h-48 bg-gradient-to-br from-color-primary via-color-secondary to-color-accent">
-            <div class="absolute inset-0 bg-black/20"></div>
-            <div class="absolute bottom-4 left-4 text-white">
-              <h3 class="text-xl font-bold mb-1" th:text="${course.nom}">Nom de la course</h3>
-              <p class="text-sm opacity-90" th:text="${course.ville}">Ville</p>
-            </div>
-            <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1">
-              <span class="text-white text-sm font-medium" th:text="${course.prix + '€'}">Prix</span>
+             class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group card-hover animate-on-scroll border">
+          <div class="relative h-32 bg-gradient-to-br from-color-primary via-color-secondary to-color-accent flex items-center justify-center">
+            <div class="text-white text-center">
+              <h3 class="text-lg font-bold" th:text="${course.ville}">Ville</h3>
+              <p class="text-sm opacity-90" th:text="${#dates.format(course.dateCourse, 'dd MMMM yyyy')}">Date</p>
             </div>
           </div>
           
           <div class="p-6">
-            <div class="flex items-center text-gray-600 text-sm mb-3">
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-              </svg>
-              <span th:text="${#dates.format(course.dateCourse, 'dd MMMM yyyy')}">Date</span>
-            </div>
-            
-            <p class="text-gray-700 mb-4 line-clamp-3" th:text="${course.description}">
-              Description de la course
-            </p>
+            <h4 class="font-semibold text-gray-900 mb-2" th:text="${course.nom}">Nom de la course</h4>
+            <p class="text-gray-600 text-sm mb-4 line-clamp-2" th:text="${course.description}">Description</p>
             
             <div class="flex items-center justify-between">
-              <div class="flex items-center text-sm text-gray-600">
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                </svg>
-                <span th:text="${course.distanceKm + ' km'}">Distance</span>
-              </div>
+              <span class="text-color-primary font-semibold" th:text="${course.prix + '€'}">Prix</span>
               <a th:href="|${contextPath}/courses/${course.idCourse}|" 
-                 class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-color-primary to-color-secondary text-white text-sm font-medium rounded-lg hover:shadow-lg transition-all duration-300 group-hover:scale-105">
-                Voir détails
-                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
+                 class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-color-primary to-color-secondary text-white text-sm font-medium rounded-lg hover:shadow-lg transition-all duration-300">
+                Participer
               </a>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- No courses message -->
+      <!-- Sample events if no courses -->
       <div th:if="${upcomingCourses == null or upcomingCourses.isEmpty()}" 
-           class="text-center py-12">
-        <div class="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
-          <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-          </svg>
+           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Sample Event 1 -->
+        <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group card-hover animate-on-scroll border">
+          <div class="relative h-32 bg-gradient-to-br from-color-primary to-color-secondary flex items-center justify-center">
+            <div class="text-white text-center">
+              <h3 class="text-lg font-bold">Bordeaux</h3>
+              <p class="text-sm opacity-90">Dimanche 12 mai 2025</p>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="bg-color-primary/10 text-color-primary px-3 py-1 rounded-full text-sm font-medium inline-block mb-4">
+              Participer
+            </div>
+          </div>
         </div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Aucune course à venir</h3>
-        <p class="text-gray-600 mb-6">De nouvelles courses seront bientôt ajoutées !</p>
-        <a th:href="|${contextPath}/courses|" 
-           class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-color-primary to-color-secondary text-white font-medium rounded-lg hover:shadow-lg transition-all duration-300">
-          Voir toutes les courses
-        </a>
+
+        <!-- Sample Event 2 -->
+        <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group card-hover animate-on-scroll border">
+          <div class="relative h-32 bg-gradient-to-br from-color-accent to-color-green flex items-center justify-center">
+            <div class="text-white text-center">
+              <h3 class="text-lg font-bold">Lyon</h3>
+              <p class="text-sm opacity-90">Samedi 8 juin 2025</p>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="bg-color-accent/10 text-color-accent px-3 py-1 rounded-full text-sm font-medium inline-block mb-4">
+              Participer
+            </div>
+          </div>
+        </div>
+
+        <!-- Sample Event 3 -->
+        <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group card-hover animate-on-scroll border">
+          <div class="relative h-32 bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center">
+            <div class="text-white text-center">
+              <h3 class="text-lg font-bold">Marseille</h3>
+              <p class="text-sm opacity-90">Dimanche 22 septembre 2025</p>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="bg-pink-100 text-pink-600 px-3 py-1 rounded-full text-sm font-medium inline-block mb-4">
+              Participer
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- View all link -->
-      <div th:if="${upcomingCourses != null and !upcomingCourses.isEmpty()}" 
-           class="text-center mt-12">
+      <div class="text-center mt-12 animate-on-scroll">
         <a th:href="|${contextPath}/courses|" 
-           class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-color-primary to-color-secondary text-white font-semibold text-lg rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
-          Voir toutes les courses
-          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-          </svg>
+           class="inline-flex items-center px-8 py-4 btn-primary text-white font-semibold text-lg rounded-xl shadow-lg">
+          Voir plus d'événements
         </a>
       </div>
     </div>
   </section>
 
-  <!-- CTA Section -->
-  <section class="py-20 bg-gradient-to-r from-color-purple via-color-pink to-color-primary">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
-        Prêt à vivre l'expérience Color Run ?
-      </h2>
-      <p class="text-xl text-white/90 mb-8">
-        Rejoignez des milliers de participants pour une course inoubliable !
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a th:if="${sessionUser == null}"
-           th:href="|${contextPath}/register|" 
-           class="inline-flex items-center px-8 py-4 bg-white text-color-primary font-semibold text-lg rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
-          <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
-          </svg>
-          Créer mon compte
-        </a>
-        <a th:href="|${contextPath}/courses|" 
-           class="inline-flex items-center px-8 py-4 bg-transparent border-2 border-white text-white font-semibold text-lg rounded-xl hover:bg-white hover:text-color-primary transition-all duration-300">
-          <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-          </svg>
-          Explorer les courses
-        </a>
+  <!-- Join Adventure Section -->
+  <section class="py-20 bg-gradient-to-br from-color-primary via-color-secondary to-color-accent relative overflow-hidden">
+    <div class="absolute inset-0 bg-black/20"></div>
+    <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="animate-on-scroll">
+          <div class="w-full h-64 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+            <div class="text-white text-center">
+              <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/>
+              </svg>
+              <p class="text-lg font-semibold">Image de l'aventure</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="text-left animate-on-scroll">
+          <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
+            Rejoignez l'aventure !
+          </h2>
+          <div class="space-y-4 text-white/90 text-lg">
+            <p>Prêt à vivre une expérience unique ? Inscrivez-vous ou achetez-tous un billet pour un événement inoubliable :</p>
+            <ul class="space-y-2">
+              <li class="flex items-center">
+                <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                Un t-shirt Color Run officiel dans votre couleur préférée
+              </li>
+              <li class="flex items-center">
+                <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                Une médaille souvenir pour célébrer votre aventure
+              </li>
+              <li class="flex items-center">
+                <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                L'accès à l'after-party, en musique et bonne humeur, au service vélocesqu'il faut pour une aventure incroyable !
+              </li>
+            </ul>
+          </div>
+          
+          <div class="flex flex-col sm:flex-row gap-4 mt-8">
+            <a th:if="${sessionUser == null}"
+               th:href="|${contextPath}/register|" 
+               class="inline-flex items-center px-6 py-3 bg-white text-color-primary font-semibold rounded-lg hover:bg-gray-100 transition-colors duration-300">
+              S'inscrire maintenant
+            </a>
+            <a th:href="|${contextPath}/courses|" 
+               class="inline-flex items-center px-6 py-3 bg-transparent border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-color-primary transition-all duration-300">
+              En savoir plus sur l'inscription
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Become Hero Section -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 animate-on-scroll">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          Devenez un héros de la Color Run
+        </h2>
+      </div>
+      
+      <div class="bg-gradient-to-r from-gray-50 to-blue-50 rounded-3xl p-8 lg:p-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div class="animate-on-scroll">
+            <p class="text-lg text-gray-700 leading-relaxed mb-6">
+              Envie de faire partie de l'équipe ? Rejoignez notre équipe de bénévoles et participez à l'organisation d'un événement inoubliable ! En tant que bénévole, vous aurez :
+            </p>
+            <ul class="space-y-3 text-gray-700">
+              <li class="flex items-center">
+                <svg class="w-5 h-5 mr-3 text-color-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                Une expérience de coulisses uniques et gratifiantes
+              </li>
+              <li class="flex items-center">
+                <svg class="w-5 h-5 mr-3 text-color-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                Contribuer aux vrais des événements positifs
+              </li>
+              <li class="flex items-center">
+                <svg class="w-5 h-5 mr-3 text-color-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                L'équipe de recrutement en réseau avec d'autres bénévoles sympathiques
+              </li>
+              <li class="flex items-center">
+                <svg class="w-5 h-5 mr-3 text-color-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                Terminer des merveilles ensuite avec l'équipe : de beaux souvenirs en perspective !
+              </li>
+              <li class="flex items-center">
+                <svg class="w-5 h-5 mr-3 text-color-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                Et bien sûr, participer à la Color Run avec les coureurs, tout ça par votre engagement. Merci de votre aide précieuse !
+              </li>
+            </ul>
+            
+            <div class="flex flex-col sm:flex-row gap-4 mt-8">
+              <a th:if="${sessionUser != null and sessionUserRoles != null and !#lists.contains(sessionUserRoles, 'ORGANISATEUR')}"
+                 th:href="|${contextPath}/user/request-organizer|" 
+                 class="inline-flex items-center px-6 py-3 btn-primary text-white font-semibold rounded-lg">
+                S'inscrire maintenant
+              </a>
+              <a th:if="${sessionUser == null}"
+                 th:href="|${contextPath}/register|" 
+                 class="inline-flex items-center px-6 py-3 btn-primary text-white font-semibold rounded-lg">
+                S'inscrire maintenant
+              </a>
+              <a th:href="|${contextPath}/courses|" 
+                 class="inline-flex items-center px-6 py-3 btn-secondary font-semibold rounded-lg">
+                En savoir plus sur l'inscription
+              </a>
+            </div>
+          </div>
+          
+          <div class="animate-on-scroll">
+            <div class="w-full h-64 bg-gradient-to-br from-color-primary via-color-secondary to-color-accent rounded-2xl flex items-center justify-center">
+              <div class="text-white text-center">
+                <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                <p class="text-lg font-semibold">Image des bénévoles</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
   <footer th:replace="~{fragments/footer :: footer}"></footer>
+
+  <!-- JavaScript for animations -->
+  <script>
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animated');
+        }
+      });
+    }, observerOptions);
+    
+    // Observe all elements with animate-on-scroll class
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+      observer.observe(el);
+    });
+    
+    // Add initial animation delay for sequential appearance
+    document.querySelectorAll('.animate-on-scroll').forEach((el, index) => {
+      el.style.transitionDelay = `${index * 0.1}s`;
+    });
+  </script>
 </body>
 </html>
