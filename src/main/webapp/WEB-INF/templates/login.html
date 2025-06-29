@@ -1,27 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title th:text="${pageTitle}">Connexion - Color Run</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'color-primary': '#FF6B35',
-            'color-secondary': '#F7931E',
-            'color-accent': '#FFE135',
-            'color-pink': '#FF006E',
-            'color-purple': '#8338EC',
-            'color-blue': '#3A86FF',
-            'color-green': '#06FFA5',
-          }
-        }
-      }
-    }
-  </script>
+  <th:block th:replace="~{fragments/head :: head}"></th:block>
+  <title th:text="${pageTitle != null ? pageTitle : 'Connexion - Color Run'}">Connexion - Color Run</title>
 </head>
 <body class="min-h-screen bg-gray-50 flex items-center justify-center px-4">
 <div class="w-full max-w-md">
