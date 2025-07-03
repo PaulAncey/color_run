@@ -12,3 +12,4 @@ public interface UtilisateurDAO extends GenericDAO<Utilisateur, Integer> {
     boolean verifyPassword(String email, String password) throws DAOException;
     List<Role> getUserRoles(int idUtilisateur) throws DAOException;
 }
+

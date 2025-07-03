@@ -18,4 +18,7 @@ public interface UtilisateurService {
     boolean aRole(int idUtilisateur, String nomRole) throws ServiceException;
     void attribuerRole(int idUtilisateur, String nomRole) throws ServiceException;
     void retirerRole(int idUtilisateur, String nomRole) throws ServiceException;
+    void demanderResetMotDePasse(String email) throws ServiceException;
+    void resetMotDePasse(String token, String nouveauMotDePasse) throws ServiceException;
+    int compterTousLesUtilisateurs() throws ServiceException;
 }

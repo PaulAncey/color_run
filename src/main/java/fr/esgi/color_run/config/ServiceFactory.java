@@ -3,6 +3,7 @@ package fr.esgi.color_run.config;
 import fr.esgi.color_run.service.*;
 import fr.esgi.color_run.service.impl.*;
 
+
 /**
  * Factory pour créer des instances de Service
  * Cette classe facilite l'injection de dépendances sans utiliser de framework
@@ -18,6 +19,7 @@ public class ServiceFactory {
     private ParticipationService participationService;
     private MessageService messageService;
     private DemandeOrganisateurService demandeOrganisateurService;
+    private EmailService emailService;
     
     private ServiceFactory() {
         // Constructeur privé pour le pattern Singleton
@@ -31,6 +33,13 @@ public class ServiceFactory {
             instance = new ServiceFactory();
         }
         return instance;
+    }
+
+    public EmailService getEmailService() {
+        if (emailService == null) {
+            emailService = new EmailServiceImpl();
+        }
+        return emailService;
     }
     
     /**

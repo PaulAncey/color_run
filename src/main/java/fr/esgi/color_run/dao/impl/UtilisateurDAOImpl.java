@@ -267,7 +267,8 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
             DatabaseConfig.closeResources(rs, stmt, conn);
         }
     }
-    
+
+
     /**
      * Transforme une ligne de résultat en objet Utilisateur
      */
